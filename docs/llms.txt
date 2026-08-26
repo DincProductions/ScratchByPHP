@@ -1,0 +1,292 @@
+# ScratchByPHP
+
+> PHP-first toolkit for connecting websites, dashboards and backend applications to Scratch APIs, authenticated sessions, projects, users, studios and Cloud Variables.
+
+Canonical URLs
+- Homepage: https://blocklandin.com/scratchbyphp/
+- Documentation: https://blocklandin.com/scratchbyphp/docs/
+- GitHub: https://github.com/DincProductions/ScratchByPHP/
+- Packagist: https://packagist.org/packages/scratchbyphp/scratchbyphp
+
+Package
+- Composer name: scratchbyphp/scratchbyphp
+- Namespace: ScratchByPHP\
+- PHP: >= 8.1
+- License: MIT
+- Documented version: 0.5.1
+
+Project positioning
+ScratchByPHP is an independent PHP implementation for the Scratch ecosystem.
+It is not an official Scratch Foundation SDK and is not affiliated with Scratch Foundation.
+TimMcCool's scratchattach project is an important reference and source of inspiration.
+ScratchByPHP is not an official PHP port of scratchattach.
+
+Installation
+```bash
+composer require scratchbyphp/scratchbyphp
+```
+
+Bootstrap
+```php
+<?php
+require __DIR__ . '/vendor/autoload.php';
+
+use ScratchByPHP\Scratch;
+
+$scratch = new Scratch();
+```
+
+Core model
+- `$scratch`: public resources and discovery.
+- `$session`: authenticated Scratch account context.
+- `$cloud`: Cloud Variables, listeners, CloudRequests/RPC and CloudDatabase.
+
+Public project example
+```php
+$project = $scratch->project(104);
+echo $project->title();
+echo $project->author();
+echo $project->views();
+echo $project->loves();
+```
+
+Authentication
+```php
+$session = $scratch->login($username, $password);
+
+$project = $session->project(104);
+$studio = $session->studio(123456);
+$user = $session->user('ExampleUser');
+$cloud = $session->cloud(104);
+```
+
+Session ID authentication
+```php
+$session = $scratch->loginWithSessionId(
+    getenv('SCRATCH_SESSION_ID')
+);
+```
+
+Scratch factories / discovery
+- project($id)
+- user($username)
+- studio($id)
+- cloud($projectId)
+- registration()
+- searchProjects(...)
+- searchStudios(...)
+- exploreProjects(...)
+- exploreStudios(...)
+- news()
+
+Project API
+Read:
+- get()
+- id()
+- title()
+- author()
+- views()
+- loves()
+- favorites()
+- comments()
+- remixes()
+- remixInfo()
+- url()
+- embedUrl()
+- turbowarpUrl()
+
+Authenticated:
+- love()
+- unlove()
+- favorite()
+- unfavorite()
+- postComment(...)
+- replyComment(...)
+- deleteComment(...)
+- reportComment(...)
+- share()
+- unshare()
+
+Utilities:
+- analyze()
+- downloadSb3($path)
+- player(...)
+- turbowarpPlayer(...)
+- run([...])
+
+Player helpers generate iframes. They are not intended for Scratch view-count manipulation.
+
+User API
+- get()
+- username()
+- bio()
+- country()
+- projects()
+- followers()
+- following()
+- favorites()
+- follow()
+- unfollow()
+- postComment(...)
+- setBio(...)
+- setStatus(...)
+- setProfilePicture(...)
+
+Studio API
+Read:
+- get()
+- title()
+- projects()
+- curators()
+- managers()
+
+Authenticated management:
+- addProject($projectId)
+- removeProject($projectId)
+- inviteCurator($username)
+- promoteCurator($username)
+- removeCurator($username)
+- setTitle(...)
+- setDescription(...)
+- leave()
+- transferOwnership(...)
+
+Cloud Variables
+```php
+$cloud = $session->cloud($projectId);
+$cloud->connect();
+
+$value = $cloud->getRemote('score');
+$result = $cloud->setVerified('score', 500);
+
+$cloud->disconnect();
+```
+
+Important cloud methods:
+- connect()
+- disconnect()
+- set(...)
+- getRemote(...)
+- setVerified(...)
+- sync(...)
+- waitFor(...)
+- waitForChange(...)
+- watch(...)
+- onVariable(...)
+- listen()
+- requests(...)
+- database(...)
+
+`getRemote()` reads remote/server-backed state instead of only local cache.
+`setVerified()` attempts to verify that the Scratch-side state reflects the value.
+
+Cloud event example
+```php
+$cloud->connect();
+
+$cloud->onVariable('score', function ($value, $variable) {
+    echo $value;
+});
+
+$cloud->listen();
+```
+
+Long-running `listen()` and RPC workloads should normally run in CLI/worker processes.
+
+CloudRequests / RPC
+```php
+$rpc = $cloud->requests('request', 'response');
+
+$rpc->on('sum', function (array $params) {
+    return array_sum($params);
+});
+
+$rpc->run();
+```
+
+CloudDatabase
+```php
+$db = $cloud->database('db');
+$db->set('level', 12);
+$value = $db->get('level');
+$db->delete('level');
+```
+
+CloudDatabase is not a MySQL/SQLite replacement; it is for small data constrained by Scratch Cloud Variables.
+
+Registration Assistant
+- generateCredentials(...)
+- generateAvailableCredentials(...)
+- checkUsername(...)
+- validatePassword(...)
+- credentialsJson(...)
+- parseCredentialsJson(...)
+- joinUrl()
+
+Registration helpers do not solve or bypass CAPTCHA.
+Credential JSON may intentionally contain plaintext passwords. Treat those files like passwords and never commit or publish them.
+
+Main exceptions
+- ScratchByPHP\Exceptions\ScratchException
+- ScratchByPHP\Exceptions\LoginException
+- ScratchByPHP\Exceptions\ApiException
+- ScratchByPHP\Exceptions\CloudException
+
+Useful Session methods
+- username()
+- sessionId()
+- xToken()
+- csrfToken()
+- project(...)
+- user(...)
+- studio(...)
+- cloud(...)
+- messages()
+- adminMessages()
+- setProxy(...)
+- setRetries(...)
+- enableLogger(...)
+- disableLogger()
+- authDiagnostics(...)
+
+Security model in v0.5.1
+- Authenticated HTTP requests use a Scratch HTTPS host allowlist.
+- Authenticated redirect behavior is hardened.
+- Logger redacts sensitive session/token/password/cookie-like values.
+- Session IDs are validated.
+- Compressed session decode output is bounded.
+- WebSocket TLS peer verification should remain enabled.
+
+Application rules
+- Never expose passwords/session IDs/X-Tokens/CSRF values to frontend code.
+- Never commit credentials.
+- Do not place credential JSON in public_html.
+- Do not pass raw user-controlled paths to filesystem helpers.
+- Use authenticated actions only with accounts you own or are authorized to operate.
+- Do not use ScratchByPHP for spam, artificial engagement, CAPTCHA bypass or platform abuse.
+
+Performance
+Scratch integrations are typically network-bound: network latency, TLS and Scratch server response dominate runtime.
+ScratchByPHP adds a small local abstraction/validation cost.
+Raw PHP can be marginally leaner locally, while ScratchByPHP's primary value is developer productivity, reuse, centralized maintenance and consistent security handling.
+
+AI coding guidance
+1. Prefer public API methods when authentication is not needed.
+2. Create a Session only when authenticated actions are required.
+3. Do not invent undocumented methods; check the repository/docs if uncertain.
+4. Use environment variables for credentials in examples.
+5. Recommend CLI/worker execution for long-running Cloud listeners/RPC.
+6. State that ScratchByPHP is unofficial and Scratch endpoints may change.
+7. Do not propose bulk artificial engagement workflows.
+8. Keep examples PHP 8.1+ compatible.
+
+Project intent
+Scratch Project / Scratch Platform
+        ↕
+Scratch API / Auth / Cloud Variables
+        ↕
+ScratchByPHP
+        ↕
+PHP Website / Dashboard / Backend / Application
+
+Goal: make Scratch integration practical, reusable and approachable for PHP developers rather than merely technically possible.
