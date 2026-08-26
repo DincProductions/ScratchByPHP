@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/assets/brand/scratchbyphp-logo-full.png" alt="ScratchByPHP" width="720"></p>
+
 # ScratchByPHP
 
 > **A bridge between PHP and Scratch.** An open-source PHP library designed to make Scratch projects, users, studios, authenticated sessions, and Cloud Variables easier to use from PHP applications.
@@ -212,11 +214,20 @@ try {
 
 ## Publishing to Packagist
 
-Create a GitHub repository, push this repository, create a `v0.5.0` tag, and submit the repository URL to Packagist. Users can then install with:
+Create a GitHub repository, push this repository, create a `v0.5.1` tag, and submit the repository URL to Packagist. Users can then install with:
 
 ```bash
 composer require scratchbyphp/scratchbyphp
 ```
+
+## v0.5.1 security hardening
+
+- Authenticated HTTP clients can send credential-bearing requests only to HTTPS Scratch domains.
+- Automatic redirects are disabled for requests carrying Scratch credentials.
+- Logger output redacts tokens, sessions, cookies, authorization values, and sensitive query parameters.
+- Session IDs are length/control-character validated and compressed decoded payloads are capped at 64 KiB.
+- Do not pass untrusted web-user paths directly to download/file helper methods.
+- Plaintext account JSON is intentional; treat the JSON file exactly like a password file and never publish it.
 
 ## Responsible use
 
@@ -225,6 +236,17 @@ Use authenticated actions only with accounts you own or are authorized to use. D
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+
+## Credits and references
+
+While designing ScratchByPHP's API and feature scope,
+[TimMcCool/scratchattach](https://github.com/TimMcCool/scratchattach) has been an
+important **reference and source of inspiration**. `scratchattach` is a broad Python
+toolkit for Scratch APIs and Cloud features and is distributed under the MIT license.
+
+ScratchByPHP is an independent PHP implementation and is not an official PHP port of
+scratchattach. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for details.
 
 ## License
 

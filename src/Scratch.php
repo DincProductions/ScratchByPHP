@@ -4,7 +4,7 @@ namespace ScratchByPHP;
 use ScratchByPHP\Auth\LoginManager;
 
 final class Scratch {
-    public const VERSION = '0.5.0';
+    public const VERSION = '0.5.1';
 
     public function loginWithSessionId(string $sessionId, ?string $username = null): Session {
         return new Session($sessionId, $username);

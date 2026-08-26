@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.1
+
+- Brand assets added to documentation
+- scratchattach / TimMcCool attribution added in THIRD_PARTY_NOTICES.md
+
+Security hardening release:
+
+- Authenticated HTTP requests are restricted to HTTPS `scratch.mit.edu` hosts/subdomains
+- Automatic redirects are disabled for requests carrying Scratch credentials
+- Logger redacts tokens, session IDs, cookies, authorization data and sensitive query values
+- Scratch session IDs now have length/control-character validation
+- Compressed session payload decoding is capped at 64 KiB
+- Download helper rejects NUL paths, requires a writable target directory and uses `LOCK_EX`
+- Plaintext account JSON remains intentional and unchanged
+
+
 ## 0.5.0
 
 - Composer / Packagist metadata refreshed

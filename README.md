@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/assets/brand/scratchbyphp-logo-full.png" alt="ScratchByPHP" width="720"></p>
+
 # ScratchByPHP
 
 > **PHP ile Scratch arasında köprü.** Scratch projelerini, kullanıcılarını, stüdyolarını ve Cloud Variables altyapısını PHP uygulamalarından kullanmayı kolaylaştıran açık kaynak kütüphane.
@@ -512,7 +514,7 @@ Repo GitHub'a yüklendikten sonra:
 
 1. GitHub repository oluşturun.
 2. Bu klasörün içeriğini repo köküne yükleyin.
-3. `v0.5.0` tag'i oluşturun.
+3. `v0.5.1` tag'i oluşturun.
 4. Packagist'te **Submit** ile GitHub repo URL'sini ekleyin.
 5. Bundan sonra kullanıcılar:
 
@@ -525,7 +527,7 @@ ile kurabilir.
 Yeni sürüm yayınlarken semantic versioning kullanmanız önerilir:
 
 ```text
-0.5.0  yeni özellikler
+0.5.1  yeni özellikler
 0.5.1  hata düzeltmeleri
 0.6.0  yeni özellikler
 1.0.0  kararlı public API
@@ -555,6 +557,16 @@ Amaç, bir PHP geliştiricisinin Scratch'e bağlanmak için protokol ayrıntıla
 
 ## Güvenlik ve sorumlu kullanım
 
+### v0.5.1 güvenlik korumaları
+
+- Authenticated HTTP istemcisi credential taşıyan istekleri yalnızca HTTPS Scratch domainlerine gönderir.
+- Credential taşıyan HTTP isteklerinde otomatik redirect kapalıdır.
+- Logger token/session/cookie gibi gizli değerleri `[REDACTED]` olarak yazar.
+- Session ID boyutu ve kontrol karakterleri doğrulanır; decode edilen sıkıştırılmış payload 64 KiB ile sınırlandırılır.
+- Dosya indirme metoduna web kullanıcısından gelen path'i doğrudan vermeyin. Hedef yolu uygulamanızın kendisi belirlesin.
+- Account JSON'un plaintext parola içermesi bilinçli tasarımdır; bu dosyayı `.env` veya parola dosyası gibi gizli tutun ve public web dizinine koymayın.
+
+
 ScratchByPHP güçlü oturum ve yazma fonksiyonları içerir. Kendi hesabınız veya işlem yapmaya yetkili olduğunuz hesaplarla kullanın.
 
 - CAPTCHA veya anti-abuse kontrollerini atlatmayın.
@@ -572,6 +584,17 @@ Katkı yapmak isterseniz [CONTRIBUTING.md](CONTRIBUTING.md) dosyasına bakın.
 Bug report veya feature request için GitHub Issues kullanılabilir.
 
 ---
+
+
+## Teşekkür ve kaynaklar
+
+ScratchByPHP'nin API tasarımı ve özellik kapsamı geliştirilirken
+[TimMcCool/scratchattach](https://github.com/TimMcCool/scratchattach) önemli bir
+**referans ve ilham kaynağı** olmuştur. `scratchattach`, Python tarafında geniş bir
+Scratch API/Cloud araç setidir ve MIT lisansı ile yayımlanmaktadır.
+
+ScratchByPHP bağımsız bir PHP uygulamasıdır; scratchattach'ın resmî PHP portu değildir.
+Daha ayrıntılı bilgi için [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) dosyasına bakın.
 
 ## Lisans
 

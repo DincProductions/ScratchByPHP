@@ -61,11 +61,23 @@ final class TokenManager {
 
     public static function normalizeSessionId(string $sessionId): string {
         $sessionId = trim($sessionId);
+
+        if (strlen($sessionId) > 8192) {
+            throw new \InvalidArgumentException('Scratch session ID beklenenden uzun.');
+        }
+
         $sessionId = rawurldecode($sessionId);
         if (strlen($sessionId) >= 2 && $sessionId[0] === '"' && $sessionId[strlen($sessionId)-1] === '"') {
             $sessionId = substr($sessionId, 1, -1);
         }
-        return trim($sessionId);
+        $sessionId = trim($sessionId);
+
+        // Prevent cookie/header injection and malformed cookie values.
+        if ($sessionId === '' || preg_match('/[\r\n;\x00-\x1F\x7F]/', $sessionId)) {
+            throw new \InvalidArgumentException('Geçersiz Scratch session ID.');
+        }
+
+        return $sessionId;
     }
 
     private static function base64UrlDecode(string $value): string|false {
@@ -87,9 +99,9 @@ final class TokenManager {
             if ($raw === false) return [];
 
             if ($compressed) {
-                $inflated = @gzuncompress($raw);
-                if ($inflated === false) $inflated = @gzinflate($raw);
-                if ($inflated === false && function_exists('zlib_decode')) $inflated = @zlib_decode($raw);
+                $inflated = @gzuncompress($raw, 65536);
+                if ($inflated === false) $inflated = @gzinflate($raw, 65536);
+                if ($inflated === false && function_exists('zlib_decode')) $inflated = @zlib_decode($raw, 65536);
                 if ($inflated === false) return [];
                 $raw = $inflated;
             }

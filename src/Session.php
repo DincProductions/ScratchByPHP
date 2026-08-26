@@ -107,7 +107,7 @@ final class Session {
             'http' => $post->status,
             'returned_username' => $postJson['user']['username'] ?? null,
             'returned_x_token' => isset($postJson['user']['token']) ? '[available]' : '[missing]',
-            'body_preview' => mb_substr($post->body, 0, 300),
+            'body_preview' => substr($post->body, 0, 300),
         ];
 
         if ($post->status === 405 || $post->status === 404) {
@@ -118,7 +118,7 @@ final class Session {
                 'http' => $get->status,
                 'returned_username' => $getJson['user']['username'] ?? null,
                 'returned_x_token' => isset($getJson['user']['token']) ? '[available]' : '[missing]',
-                'body_preview' => mb_substr($get->body, 0, 300),
+                'body_preview' => substr($get->body, 0, 300),
             ];
         }
 
@@ -126,7 +126,7 @@ final class Session {
             $r = $this->http->get('https://api.scratch.mit.edu/users/' . rawurlencode($this->username()) . '/projects/' . $projectId . '/visibility');
             $out['authenticated_visibility_probe'] = [
                 'http' => $r->status,
-                'body_preview' => mb_substr($r->body, 0, 300),
+                'body_preview' => substr($r->body, 0, 300),
             ];
         }
         return $out;

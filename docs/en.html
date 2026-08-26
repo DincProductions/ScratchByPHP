@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ScratchByPHP — English Documentation</title><link rel="stylesheet" href="assets/style.css"></head><body>
-<header class="topbar"><div class="topbar-inner"><a class="brand" href="index.html"><span class="logo">S</span>ScratchByPHP</a><div class="spacer"></div><div class="lang"><a class="pill" href="index.html">TR</a><a class="pill" href="en.html">EN</a><a class="pill" href="https://github.com/scratchbyphp/scratchbyphp">GitHub</a></div></div></header>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="index.html"><img src="assets/brand/scratchbyphp-icon-64.png" alt="" width="34" height="34">ScratchByPHP</a><div class="spacer"></div><div class="lang"><a class="pill" href="index.html">TR</a><a class="pill" href="en.html">EN</a><a class="pill" href="https://github.com/scratchbyphp/scratchbyphp">GitHub</a></div></div></header>
 <div class="layout"><aside class="sidebar"><input id="doc-search" placeholder="Search docs..."><nav class="nav"><a href="#start">Getting started</a><a href="#composer">Composer</a><a href="#public">Public API</a><a href="#auth">Authentication</a><a href="#project">Projects</a><a href="#studio">Studios</a><a href="#cloud">Cloud Variables</a><a href="#rpc">CloudRequests</a><a href="#registration">Registration</a><a href="#security">Security</a><a href="#packagist">GitHub & Packagist</a></nav></aside><main>
 <section class="hero"><div class="badge">English documentation</div><h1>Bridge PHP and Scratch.</h1><p>ScratchByPHP provides a PHP-first layer for Scratch projects, users, studios, authenticated sessions, and Cloud Variables.</p><div class="hero-actions"><a class="btn btn-primary" href="#start">Start in 5 minutes</a><a class="btn btn-secondary" href="index.html">Türkçe</a></div></section>
 
@@ -114,10 +114,20 @@ $result = $registration-&gt;generateAvailableCredentials(
 echo $registration-&gt;joinUrl();</code></pre></div>
 <p>The library does not solve or bypass CAPTCHA.</p></section>
 
-<section class="section" id="security"><h2>Security and responsible use</h2><ul><li>Do not log credentials or tokens.</li><li>Use only accounts you own or are authorized to operate.</li><li>Do not bypass CAPTCHA or anti-abuse controls.</li><li>Do not use the library for spam or artificial engagement.</li></ul></section>
+<section class="section" id="security"><h2>Security and responsible use</h2><div class="callout ok"><strong>v0.5.1 hardening:</strong> credential-bearing HTTP requests are restricted to HTTPS Scratch domains, authenticated redirects are disabled, logger secrets are redacted, and session decompression is capped at 64 KiB. Plaintext account JSON remains intentional.</div><ul><li>Do not log credentials or tokens.</li><li>Use only accounts you own or are authorized to operate.</li><li>Do not bypass CAPTCHA or anti-abuse controls.</li><li>Do not use the library for spam or artificial engagement.</li></ul></section>
 
-<section class="section" id="packagist"><h2>GitHub & Packagist</h2><p>Push the repository, create a <span class="inline">v0.5.0</span> tag, then submit the GitHub repository to Packagist.</p>
+<section class="section" id="packagist"><h2>GitHub & Packagist</h2><p>Push the repository, create a <span class="inline">v0.5.1</span> tag, then submit the GitHub repository to Packagist.</p>
 <div class="code-wrap"><div class="code-head"><span>Terminal</span><button class="copy" data-label="Copy">Copy</button></div><pre><code>composer require scratchbyphp/scratchbyphp</code></pre></div></section>
 
-<div class="footer">ScratchByPHP v0.5.0 · MIT · Not affiliated with Scratch Foundation.</div>
+
+<section class="section" id="credits">
+<h2>Credits and references</h2>
+<p>While designing ScratchByPHP's API and feature scope,
+<a href="https://github.com/TimMcCool/scratchattach">TimMcCool's scratchattach project</a>
+has been an important <strong>reference and source of inspiration</strong>.
+scratchattach is an MIT-licensed Python toolkit for Scratch APIs and Cloud features.</p>
+<p>ScratchByPHP is an independent PHP implementation and is not an official PHP port of scratchattach.</p>
+</section>
+
+<div class="footer">ScratchByPHP v0.5.1 · MIT · Not affiliated with Scratch Foundation.</div>
 </main></div><script src="assets/docs.js"></script></body></html>

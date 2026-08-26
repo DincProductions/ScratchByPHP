@@ -2,7 +2,7 @@
 <html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ScratchByPHP — Türkçe Dokümantasyon</title><meta name="description" content="PHP ile Scratch arasında köprü: ScratchByPHP Türkçe dokümantasyon.">
 <link rel="stylesheet" href="assets/style.css"></head><body>
-<header class="topbar"><div class="topbar-inner"><a class="brand" href="index.html"><span class="logo">S</span>ScratchByPHP</a><div class="spacer"></div><div class="lang"><a class="pill" href="index.html">TR</a><a class="pill" href="en.html">EN</a><a class="pill" href="https://github.com/scratchbyphp/scratchbyphp">GitHub</a></div></div></header>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="index.html"><img src="assets/brand/scratchbyphp-icon-64.png" alt="" width="34" height="34">ScratchByPHP</a><div class="spacer"></div><div class="lang"><a class="pill" href="index.html">TR</a><a class="pill" href="en.html">EN</a><a class="pill" href="https://github.com/scratchbyphp/scratchbyphp">GitHub</a></div></div></header>
 <div class="layout"><aside class="sidebar"><input id="doc-search" placeholder="Dokümanda ara..."><nav class="nav"><a href="#baslangic">Başlangıç</a><a href="#composer">Composer kurulumu</a><a href="#public">Public API</a><a href="#auth">Giriş ve Session</a><a href="#user">User API</a><a href="#project">Project API</a><a href="#studio">Studio API</a><a href="#cloud">Cloud Variables</a><a href="#rpc">CloudRequests</a><a href="#database">CloudDatabase</a><a href="#search">Arama ve mesajlar</a><a href="#registration">Registration</a><a href="#player">Project Player</a><a href="#errors">Hata yönetimi</a><a href="#security">Güvenlik</a><a href="#packagist">GitHub & Packagist</a></nav></aside>
 <main>
 <section class="hero"><div class="badge">Türkçe ana dokümantasyon</div><h1>PHP ile Scratch arasında köprü.</h1><p>ScratchByPHP; Scratch kullanıcılarını, projelerini, stüdyolarını, oturum işlemlerini ve Cloud Variables altyapısını PHP uygulamalarına bağlamayı kolaylaştırır.</p><div class="hero-actions"><a class="btn btn-primary" href="#baslangic">5 dakikada başla</a><a class="btn btn-secondary" href="en.html">English docs</a></div></section>
@@ -237,12 +237,12 @@ try {
 }</code></pre></div>
 </section>
 
-<section class="section" id="security"><h2>Güvenlik ve sorumlu kullanım</h2>
+<section class="section" id="security"><h2>Güvenlik ve sorumlu kullanım</h2><div class="callout ok"><strong>v0.5.1 hardening:</strong> Auth istekleri yalnız HTTPS Scratch domainlerine gider; auth redirectleri kapalıdır; logger secret değerleri maskeler; session decoder 64 KiB ile sınırlıdır. Plaintext hesap JSON formatı bilinçli olarak korunur.</div>
 <ul><li>Credential/token bilgilerini loglamayın.</li><li>Kendi hesabınız veya yetkili olduğunuz hesapları kullanın.</li><li>CAPTCHA/anti-abuse kontrollerini atlatmayın.</li><li>Spam veya yapay etkileşim üretmek için kullanmayın.</li><li>Scratch topluluk kurallarına uyun.</li></ul>
 </section>
 
 <section class="section" id="packagist"><h2>GitHub ve Packagist'e yayınlama</h2>
-<ol><li>Repo içeriğini GitHub'a push edin.</li><li>GitHub Pages için <span class="inline">Settings → Pages → GitHub Actions</span> seçin.</li><li><span class="inline">v0.5.0</span> tag'i oluşturun.</li><li>Packagist'te repository URL'nizi Submit ile ekleyin.</li></ol>
+<ol><li>Repo içeriğini GitHub'a push edin.</li><li>GitHub Pages için <span class="inline">Settings → Pages → GitHub Actions</span> seçin.</li><li><span class="inline">v0.5.1</span> tag'i oluşturun.</li><li>Packagist'te repository URL'nizi Submit ile ekleyin.</li></ol>
 <div class="code-wrap"><div class="code-head"><span>Terminal</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>git init
 git add .
 git commit -m "Initial ScratchByPHP release"
@@ -250,11 +250,21 @@ git branch -M main
 git remote add origin https://github.com/scratchbyphp/scratchbyphp.git
 git push -u origin main
 
-git tag v0.5.0
-git push origin v0.5.0</code></pre></div>
+git tag v0.5.1
+git push origin v0.5.1</code></pre></div>
 <p>Yayınlandıktan sonra:</p>
 <div class="code-wrap"><div class="code-head"><span>Terminal</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>composer require scratchbyphp/scratchbyphp</code></pre></div>
 </section>
 
-<div class="footer">ScratchByPHP v0.5.0 · MIT · Scratch Foundation ile bağlantılı değildir.</div>
+
+<section class="section" id="credits">
+<h2>Teşekkür ve kaynaklar</h2>
+<p>ScratchByPHP'nin API tasarımı ve özellik kapsamı geliştirilirken
+<a href="https://github.com/TimMcCool/scratchattach">TimMcCool'un scratchattach projesi</a>
+önemli bir <strong>referans ve ilham kaynağı</strong> olmuştur. scratchattach MIT lisanslı
+bir Python Scratch API/Cloud araç setidir.</p>
+<p>ScratchByPHP bağımsız bir PHP uygulamasıdır; scratchattach'ın resmî PHP portu değildir.</p>
+</section>
+
+<div class="footer">ScratchByPHP v0.5.1 · MIT · Scratch Foundation ile bağlantılı değildir.</div>
 </main></div><script src="assets/docs.js"></script></body></html>
