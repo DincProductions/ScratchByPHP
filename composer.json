@@ -1,0 +1,38 @@
+{
+  "name": "scratchbyphp/scratchbyphp",
+  "description": "Scratch API, authenticated sessions, studios, projects and cloud variables toolkit for PHP.",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "scratch",
+    "scratch-api",
+    "scratch-cloud",
+    "cloud-variables",
+    "php",
+    "websocket",
+    "scratch-mit",
+    "scratch3"
+  ],
+  "homepage": "https://scratchbyphp.github.io/scratchbyphp/",
+  "support": {
+    "issues": "https://github.com/scratchbyphp/scratchbyphp/issues",
+    "source": "https://github.com/scratchbyphp/scratchbyphp"
+  },
+  "autoload": {
+    "psr-4": {
+      "ScratchByPHP\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=8.1",
+    "ext-curl": "*",
+    "ext-openssl": "*",
+    "ext-json": "*"
+  },
+  "require-dev": {},
+  "scripts": {
+    "lint": "php -r \"$it=new RecursiveIteratorIterator(new RecursiveDirectoryIterator('src')); foreach($it as $f){if($f->isFile()&&$f->getExtension()==='php'){passthru('php -l '.escapeshellarg($f->getPathname()),$c); if($c) exit($c);}}\""
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
