@@ -1,43 +1,74 @@
-<p align="center"><img src="docs/assets/brand/scratchbyphp-logo-full.png" alt="ScratchByPHP" width="720"></p>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/brand/scratchbyphp-logo-full-dark.png">
+    <img src="docs/assets/brand/scratchbyphp-logo-full-light.png" alt="ScratchByPHP" width="760">
+  </picture>
+</p>
 
-# ScratchByPHP
+<p align="center">
+  <strong>A bridge between PHP and Scratch.</strong><br>
+  An open-source toolkit that makes Scratch projects, users, studios, authenticated sessions and Cloud Variables easier to use from PHP applications.
+</p>
 
-> **A bridge between PHP and Scratch.** An open-source PHP library designed to make Scratch projects, users, studios, authenticated sessions, and Cloud Variables easier to use from PHP applications.
+<p align="center">
+  <a href="https://github.com/scratchbyphp/scratchbyphp/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/scratchbyphp/scratchbyphp/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://www.php.net/"><img alt="PHP 8.1+" src="https://img.shields.io/badge/PHP-8.1%2B-777BB4?logo=php&logoColor=white"></a>
+  <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-2ea44f"></a>
+</p>
 
-[![CI](https://github.com/scratchbyphp/scratchbyphp/actions/workflows/ci.yml/badge.svg)](https://github.com/scratchbyphp/scratchbyphp/actions/workflows/ci.yml)
-[![PHP](https://img.shields.io/badge/PHP-8.1%2B-777BB4.svg)](https://www.php.net/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+<p align="center">
+  <a href="README.md">Türkçe</a> · <strong>English</strong> · <a href="https://scratchbyphp.github.io/scratchbyphp/en.html">Documentation</a> · <a href="docs/brand.html">Brand Assets</a>
+</p>
 
-[Türkçe README](README.md) · **English** · [Documentation](docs/en.html)
+---
 
 ## What is ScratchByPHP?
 
-ScratchByPHP aims to connect ordinary PHP websites and backend applications to Scratch without requiring every developer to manually implement Scratch endpoints, authentication details, cookies, tokens, and the Cloud WebSocket protocol.
+ScratchByPHP aims to provide a reusable bridge between **PHP websites/backends and Scratch**.
+
+Instead of implementing Scratch endpoints, session cookies/headers and the Cloud WebSocket protocol from scratch for every project, developers can work with a more readable PHP API.
 
 ```php
+<?php
+
+require __DIR__ . '/vendor/autoload.php';
+
 use ScratchByPHP\Scratch;
 
 $scratch = new Scratch();
-
 $project = $scratch->project(104);
 
 echo $project->title();
 echo $project->views();
 ```
 
-The project's broader goal is to become a practical bridge:
-
 ```text
-Scratch Project
-      ↕
-Scratch API / Cloud Variables
-      ↕
+Scratch
+   ↕
+API / Session / Cloud Variables
+   ↕
 ScratchByPHP
-      ↕
-PHP Website / Backend / Application
+   ↕
+PHP Website / Backend / Panel / Application
 ```
 
-ScratchByPHP is not an official Scratch Foundation SDK. Scratch endpoints can change.
+> ScratchByPHP is not an official Scratch Foundation SDK. Unofficial/internal Scratch endpoints may change over time.
+
+## Features
+
+- Public user, project and studio data
+- Username/password and session-ID authentication
+- Project comments, likes/favorites, sharing and analysis
+- User/profile helpers
+- Studio project and curator/manager management
+- Scratch Cloud Variables
+- Cloud change listeners
+- CloudRequests RPC layer
+- CloudDatabase helper
+- Project player helpers for Scratch and TurboWarp
+- Registration Assistant and credential JSON helpers
+
+---
 
 ## Installation
 
@@ -46,6 +77,8 @@ composer require scratchbyphp/scratchbyphp
 ```
 
 ```php
+<?php
+
 require __DIR__ . '/vendor/autoload.php';
 
 use ScratchByPHP\Scratch;
@@ -53,9 +86,11 @@ use ScratchByPHP\Scratch;
 $scratch = new Scratch();
 ```
 
-PHP 8.1+, cURL, OpenSSL, and JSON extensions are required.
+Requirements: PHP **8.1+**, cURL, OpenSSL and JSON extensions.
 
-## Public project data
+## Quick start
+
+### Public project
 
 ```php
 $project = $scratch->project(104);
@@ -67,15 +102,13 @@ echo $project->loves();
 echo $project->favorites();
 ```
 
-## Authentication
+### Authentication
 
 ```php
 $session = $scratch->login(
     'Username',
     'Password'
 );
-
-echo $session->username();
 ```
 
 Or:
@@ -86,26 +119,9 @@ $session = $scratch->loginWithSessionId(
 );
 ```
 
-Never commit passwords, session IDs, CSRF tokens, or X-Tokens.
+Never commit passwords, session IDs, X-Tokens or CSRF values.
 
-## Users
-
-```php
-$user = $scratch->user('griffpatch');
-
-$data = $user->get();
-$projects = $user->projects();
-$followers = $user->followers();
-```
-
-Authenticated actions:
-
-```php
-$user = $session->user('ExampleUser');
-
-$user->follow();
-$user->unfollow();
-```
+---
 
 ## Projects
 
@@ -117,19 +133,24 @@ $project->favorite();
 $project->postComment('Hello from PHP');
 ```
 
-Other project helpers include comments, remixes, sharing, thumbnails, analysis, and project-player URLs.
+Project analysis:
 
 ```php
-echo $project->player(800, 600);
+$analysis = $scratch->project(104)->analyze();
+print_r($analysis->summary());
+```
 
+Player helper:
+
+```php
 echo $project->run([
     'engine' => 'turbowarp',
     'width' => 900,
-    'height' => 650
+    'height' => 650,
 ]);
 ```
 
-The player helpers are iframe helpers and are not designed as view-count manipulation functions.
+Player helpers generate iframes; they are not designed as view-count manipulation features.
 
 ## Studios
 
@@ -138,23 +159,18 @@ $studio = $session->studio(123456);
 
 $studio->addProject(104);
 $studio->removeProject(104);
-
 $studio->inviteCurator('ExampleUser');
 $studio->promoteCurator('ExampleUser');
-
 $studio->setTitle('New title');
-$studio->setDescription('New description');
 ```
 
 ## Cloud Variables
 
 ```php
 $cloud = $session->cloud(104);
-
 $cloud->connect();
 
 $value = $cloud->getRemote('score');
-
 $result = $cloud->setVerified('score', 500);
 
 $cloud->disconnect();
@@ -172,14 +188,15 @@ $cloud->onVariable('score', function ($value) {
 $cloud->listen();
 ```
 
-Long-running listeners should normally run in a CLI/worker process rather than a normal HTTP request.
+Long-running listeners are best used in CLI/worker processes.
 
 ## CloudRequests
 
 ```php
-$cloud = $session->cloud(104)->connect();
+$cloud = $session->cloud(104);
+$cloud->connect();
 
-$rpc = $cloud->requests();
+$rpc = $cloud->requests('request', 'response');
 
 $rpc->on('sum', function (array $params) {
     return array_sum($params);
@@ -190,66 +207,75 @@ $rpc->run();
 
 ## Registration Assistant
 
-The registration helper does not solve or bypass CAPTCHA.
+The helper does **not** solve or bypass CAPTCHA.
 
 ```php
 $registration = $scratch->registration();
-
 $result = $registration->generateAvailableCredentials('ScratchUser');
 
 echo $registration->joinUrl();
 ```
 
-## Error handling
+Credential JSON may intentionally contain a plaintext password. Protect these files as secrets and do not commit them.
 
-```php
-use ScratchByPHP\Exceptions\LoginException;
+---
 
-try {
-    $session = $scratch->login($username, $password);
-} catch (LoginException $e) {
-    echo $e->getMessage();
-}
+## Security
+
+ScratchByPHP `v0.5.1` includes security hardening for authenticated HTTP requests, redirects, logging and session parsing.
+
+See [SECURITY.md](SECURITY.md) for details.
+
+---
+
+## Documentation
+
+- 🇹🇷 [Turkish documentation](https://scratchbyphp.github.io/scratchbyphp/)
+- 🇬🇧 [English documentation](https://scratchbyphp.github.io/scratchbyphp/en.html)
+- 🎨 [Brand assets](docs/brand.html)
+- 🧪 [`examples/`](examples/)
+
+Turkish is the primary documentation language; English documentation is maintained alongside it.
+
+## Brand files
+
+```text
+docs/assets/brand/
+├── scratchbyphp-app-icon-light.png
+├── scratchbyphp-app-icon-dark.png
+├── scratchbyphp-icon-light.png
+├── scratchbyphp-logo-compact-light.png
+├── scratchbyphp-logo-compact-dark.png
+├── scratchbyphp-logo-full-light.png
+└── scratchbyphp-logo-full-dark.png
 ```
 
-## Publishing to Packagist
+---
 
-Create a GitHub repository, push this repository, create a `v0.5.1` tag, and submit the repository URL to Packagist. Users can then install with:
+## Development
 
 ```bash
-composer require scratchbyphp/scratchbyphp
+composer install
+composer validate --strict
+composer lint
+php tests/smoke.php
+php tests/security.php
 ```
 
-## v0.5.1 security hardening
+GitHub Actions is configured for PHP **8.1–8.4**.
 
-- Authenticated HTTP clients can send credential-bearing requests only to HTTPS Scratch domains.
-- Automatic redirects are disabled for requests carrying Scratch credentials.
-- Logger output redacts tokens, sessions, cookies, authorization values, and sensitive query parameters.
-- Session IDs are length/control-character validated and compressed decoded payloads are capped at 64 KiB.
-- Do not pass untrusted web-user paths directly to download/file helper methods.
-- Plaintext account JSON is intentional; treat the JSON file exactly like a password file and never publish it.
+## Credits
 
-## Responsible use
+While designing ScratchByPHP's API and feature scope, **[TimMcCool/scratchattach](https://github.com/TimMcCool/scratchattach)** has been an important reference and source of inspiration.
 
-Use authenticated actions only with accounts you own or are authorized to use. Do not use ScratchByPHP for CAPTCHA bypass, spam, artificial engagement, credential abuse, or other platform abuse.
+ScratchByPHP is an independent PHP implementation and is not an official PHP port of scratchattach. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-
-## Credits and references
-
-While designing ScratchByPHP's API and feature scope,
-[TimMcCool/scratchattach](https://github.com/TimMcCool/scratchattach) has been an
-important **reference and source of inspiration**. `scratchattach` is a broad Python
-toolkit for Scratch APIs and Cloud features and is distributed under the MIT license.
-
-ScratchByPHP is an independent PHP implementation and is not an official PHP port of
-scratchattach. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for details.
-
 ## License
 
-MIT. See [LICENSE](LICENSE).
+[MIT License](LICENSE)
 
 ScratchByPHP is not affiliated with the Scratch Foundation. Scratch and related marks belong to their respective owners.

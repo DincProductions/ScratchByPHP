@@ -1,61 +1,87 @@
-<p align="center"><img src="docs/assets/brand/scratchbyphp-logo-full.png" alt="ScratchByPHP" width="720"></p>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/brand/scratchbyphp-logo-full-dark.png">
+    <img src="docs/assets/brand/scratchbyphp-logo-full-light.png" alt="ScratchByPHP" width="760">
+  </picture>
+</p>
 
-# ScratchByPHP
+<p align="center">
+  <strong>PHP ile Scratch arasında köprü.</strong><br>
+  Scratch projelerini, kullanıcılarını, stüdyolarını, oturum işlemlerini ve Cloud Variables altyapısını PHP uygulamalarına taşımayı kolaylaştıran açık kaynak araç seti.
+</p>
 
-> **PHP ile Scratch arasında köprü.** Scratch projelerini, kullanıcılarını, stüdyolarını ve Cloud Variables altyapısını PHP uygulamalarından kullanmayı kolaylaştıran açık kaynak kütüphane.
+<p align="center">
+  <a href="https://github.com/scratchbyphp/scratchbyphp/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/scratchbyphp/scratchbyphp/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://www.php.net/"><img alt="PHP 8.1+" src="https://img.shields.io/badge/PHP-8.1%2B-777BB4?logo=php&logoColor=white"></a>
+  <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-2ea44f"></a>
+  <a href="https://packagist.org/packages/scratchbyphp/scratchbyphp"><img alt="Packagist" src="https://img.shields.io/badge/Packagist-scratchbyphp%2Fscratchbyphp-f28d1a?logo=packagist&logoColor=white"></a>
+</p>
 
-[![CI](https://github.com/scratchbyphp/scratchbyphp/actions/workflows/ci.yml/badge.svg)](https://github.com/scratchbyphp/scratchbyphp/actions/workflows/ci.yml)
-[![PHP](https://img.shields.io/badge/PHP-8.1%2B-777BB4.svg)](https://www.php.net/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Packagist](https://img.shields.io/badge/Packagist-scratchbyphp%2Fscratchbyphp-orange.svg)](https://packagist.org/)
-
-**Türkçe** · [English README](README.en.md) · [Dokümantasyon](docs/index.html)
+<p align="center">
+  <strong>Türkçe</strong> · <a href="README.en.md">English</a> · <a href="https://scratchbyphp.github.io/scratchbyphp/">Dokümantasyon</a> · <a href="docs/brand.html">Brand Assets</a>
+</p>
 
 ---
 
 ## ScratchByPHP nedir?
 
-Scratch ile PHP dünyası arasında doğrudan çalışmayı kolaylaştıran bir araçtır.
+ScratchByPHP, **PHP tabanlı web siteleri ve uygulamalar ile Scratch arasında yeniden kullanılabilir bir bağlantı katmanı** oluşturmayı amaçlar.
 
-Bir web siteniz, yönetim paneliniz, Discord/web servisi entegrasyonunuz veya PHP tabanlı başka bir uygulamanız varsa Scratch verilerini kullanmak için her endpoint'i, cookie'yi, token'ı ve Cloud WebSocket protokolünü sıfırdan yazmak yerine ScratchByPHP üzerinden daha okunabilir bir API kullanabilirsiniz.
+Scratch ile çalışan bir web sitesi, panel, backend veya servis geliştirirken her endpoint'i, cookie/header yapısını, session akışını ve Cloud WebSocket protokolünü ayrı ayrı yazmak yerine daha okunabilir PHP nesneleri kullanabilirsiniz.
 
 ```php
-$scratch = new ScratchByPHP\Scratch();
+<?php
 
+require __DIR__ . '/vendor/autoload.php';
+
+use ScratchByPHP\Scratch;
+
+$scratch = new Scratch();
 $project = $scratch->project(104);
 
 echo $project->title();
 echo $project->views();
 ```
 
-ScratchByPHP'nin hedefi yalnızca bir “API wrapper” olmak değildir. Projenin fikri şudur:
+Projenin temel fikri:
 
-> **Web sitelerini ve PHP uygulamalarını Scratch'e bağlayan köprü olmak.**
+```text
+Scratch
+   ↕
+API / Session / Cloud Variables
+   ↕
+ScratchByPHP
+   ↕
+PHP Website / Backend / Panel / Application
+```
 
-PHP web tarafında çok yaygın kullanılan bir teknolojidir. ScratchByPHP, Scratch'i klasik web siteleri, kontrol panelleri, PHP backend'leri ve Cloud Variable tabanlı uygulamalarla daha kolay bir araya getirmeyi amaçlar.
+> ScratchByPHP, Scratch Foundation tarafından geliştirilmiş veya resmî olarak desteklenen bir SDK değildir. Scratch'in resmî olmayan/uygulama içi endpoint'leri zaman içinde değişebilir.
 
-### Neler yapılabilir?
+## Neden ScratchByPHP?
 
-- Kullanıcı bilgilerini ve projelerini okuyabilirsiniz.
-- Proje istatistiklerini, yorumlarını ve remixlerini kullanabilirsiniz.
-- Yetkili oturumla proje ve stüdyo işlemleri gerçekleştirebilirsiniz.
-- Stüdyo proje/curator yönetimi yapabilirsiniz.
-- Scratch Cloud Variables ile PHP arasında veri alışverişi kurabilirsiniz.
-- Cloud event'lerini dinleyebilirsiniz.
-- CloudRequests ile Scratch projesinden PHP backend'e basit RPC istekleri gönderebilirsiniz.
-- Scratch proje JSON'unu analiz edebilirsiniz.
-- Scratch veya TurboWarp player için iframe üretebilirsiniz.
-- Registration Assistant ile tek hesaplık kayıt yardımcısı ve JSON credential profili oluşturabilirsiniz.
+PHP web tarafında hâlâ çok yaygın kullanılan bir teknolojidir; buna rağmen Scratch ile PHP'yi bir araya getirmek isteyen geliştiriciler çoğu işlemi kendileri uygulamak zorunda kalabilir.
 
-> ScratchByPHP, Scratch Foundation tarafından geliştirilmiş veya resmî olarak desteklenen bir SDK değildir. Scratch endpoint'leri zaman içinde değişebilir.
+ScratchByPHP'nin amacı Scratch'i yeni kullanım alanlarına açmaktır: klasik web siteleri, kontrol panelleri, küçük backend servisleri, shared-hosting projeleri ve Cloud Variable tabanlı deneyler.
+
+| Alan | ScratchByPHP ile |
+|---|---|
+| Public API | Proje, kullanıcı ve stüdyo verilerini okuyun |
+| Authentication | Kullanıcı adı/parola veya session ID ile oturum oluşturun |
+| Projects | İstatistik, yorum, remix, paylaşım ve analiz işlemleri |
+| Users | Profil, takip, projeler ve kullanıcı verileri |
+| Studios | Proje, curator/manager ve stüdyo yönetimi |
+| Cloud | Cloud Variables okuyun, yazın ve değişiklikleri dinleyin |
+| CloudRequests | Scratch → PHP RPC benzeri iletişim kurun |
+| CloudDatabase | Küçük Cloud tabanlı key/value verileri yönetin |
+| Project Analyzer | Scratch proje JSON'unu analiz edin |
+| Player | Scratch/TurboWarp iframe yardımcılarını kullanın |
+| Registration Assistant | Tek hesaplık credential üretimi ve kayıt yardımcısı |
 
 ---
 
-## 1. Kurulum
+## Kurulum
 
-### Composer ile — önerilen yöntem
-
-Bilgisayarınızda Composer varsa:
+### Composer ile — önerilen
 
 ```bash
 composer require scratchbyphp/scratchbyphp
@@ -73,64 +99,43 @@ use ScratchByPHP\Scratch;
 $scratch = new Scratch();
 ```
 
-### Composer bilmiyorum, ne yapacağım?
+### Composer nedir?
 
-Composer PHP'nin paket yöneticisidir. Node.js'teki `npm` gibi düşünebilirsiniz.
+Composer, PHP'nin paket yöneticisidir. Node.js'teki `npm` benzeri şekilde bağımlılıkları indirir ve autoload işlemini hazırlar.
 
-1. Composer'ı kurun.
-2. Terminali projenizin klasöründe açın.
-3. Şunu çalıştırın:
-
-```bash
-composer require scratchbyphp/scratchbyphp
-```
-
-4. PHP dosyanızın başına şunu ekleyin:
-
-```php
-require __DIR__ . '/vendor/autoload.php';
-```
-
-Bu kadar.
-
-### Composer kullanmadan
-
-Repo ZIP'ini indirip klasör olarak projenize koyarsanız kütüphanenin kendi autoload dosyasını da kullanabilirsiniz:
+Composer kullanmak istemiyorsanız repoyu ZIP olarak indirip kendi autoload dosyamızı da kullanabilirsiniz:
 
 ```php
 require __DIR__ . '/scratchbyphp/autoload.php';
 ```
 
+## Gereksinimler
+
+- PHP **8.1+**
+- `ext-curl`
+- `ext-openssl`
+- `ext-json`
+- Cloud özellikleri için dışarı WebSocket/TLS bağlantısına izin veren bir sunucu
+
 ---
 
-## 2. İlk program — giriş gerektirmez
+## Hızlı başlangıç
+
+### Public proje bilgisi — giriş gerekmez
 
 ```php
-<?php
-
-require __DIR__ . '/vendor/autoload.php';
-
-use ScratchByPHP\Scratch;
-
-$scratch = new Scratch();
-
 $project = $scratch->project(104);
 
-echo 'Proje: ' . $project->title() . '<br>';
-echo 'Görüntülenme: ' . $project->views() . '<br>';
-echo 'Beğeni: ' . $project->loves() . '<br>';
-echo 'Favori: ' . $project->favorites();
+echo 'Başlık: ' . $project->title() . PHP_EOL;
+echo 'Yazar: ' . $project->author() . PHP_EOL;
+echo 'Görüntülenme: ' . $project->views() . PHP_EOL;
+echo 'Beğeni: ' . $project->loves() . PHP_EOL;
+echo 'Favori: ' . $project->favorites() . PHP_EOL;
 ```
 
-Burada Scratch hesabına giriş yapmıyoruz. Çünkü public proje bilgisini okumak için oturum gerekmiyor.
-
----
-
-## 3. Scratch hesabına giriş
+### Scratch hesabına giriş
 
 ```php
-$scratch = new Scratch();
-
 $session = $scratch->login(
     'KullaniciAdi',
     'Sifre'
@@ -139,16 +144,7 @@ $session = $scratch->login(
 echo $session->username();
 ```
 
-Başarılı girişten sonra `$session`, hesabınıza bağlı işlemlerin merkezidir.
-
-```php
-$user = $session->user('griffpatch');
-$project = $session->project(104);
-$studio = $session->studio(123456);
-$cloud = $session->cloud(104);
-```
-
-### Session ID ile
+Session ID ile:
 
 ```php
 $session = $scratch->loginWithSessionId(
@@ -156,53 +152,22 @@ $session = $scratch->loginWithSessionId(
 );
 ```
 
-**Önemli:** parola, session ID ve X-Token değerlerini GitHub'a koymayın.
-
----
-
-## 4. Kullanıcı API'si
+Başarılı girişten sonra session üzerinden auth gerektiren nesneleri oluşturabilirsiniz:
 
 ```php
-$user = $scratch->user('griffpatch');
-
-$data = $user->get();
-
-echo $user->username();
-echo $user->bio();
-echo $user->country();
-
-$projects = $user->projects();
-$followers = $user->followers();
-$following = $user->following();
-$favorites = $user->favorites();
-```
-
-Oturum gerektiren örnek:
-
-```php
-$user = $session->user('BirKullanici');
-
-$user->follow();
-$user->unfollow();
-```
-
-Profil sahibi olduğunuz hesap üzerinde:
-
-```php
-$me = $session->user($session->username());
-
-$me->setBio('Yeni bio');
-$me->setStatus('Yeni durum');
+$project = $session->project(104);
+$user    = $session->user('BirKullanici');
+$studio  = $session->studio(123456);
+$cloud   = $session->cloud(104);
 ```
 
 ---
 
-## 5. Project API
+## Project API
 
 ```php
 $project = $scratch->project(104);
 
-echo $project->id();
 echo $project->title();
 echo $project->author();
 echo $project->views();
@@ -214,34 +179,37 @@ $remixes = $project->remixes();
 $remixInfo = $project->remixInfo();
 ```
 
-Yetkili işlemler:
+Auth gerektiren örnekler:
 
 ```php
 $project = $session->project(104);
 
 $project->love();
 $project->favorite();
-
-$project->unlove();
-$project->unfavorite();
-
 $project->postComment('Merhaba Scratch!');
 ```
 
-Share işlemleri:
+Projeyi paylaşma/paylaşımdan kaldırma:
 
 ```php
 $project->share();
 $project->unshare();
 ```
 
-### Projeyi görüntüleme / player
+### Project Analyzer
+
+```php
+$analysis = $scratch->project(104)->analyze();
+
+print_r($analysis->summary());
+```
+
+Proje yapısındaki sprite, block, costume, sound, variable, Cloud Variable ve extension gibi bilgileri incelemek için kullanılabilir.
+
+### Project Player
 
 ```php
 $project = $scratch->project(104);
-
-echo $project->url();
-echo $project->embedUrl();
 
 echo $project->player(800, 600);
 ```
@@ -252,41 +220,57 @@ TurboWarp:
 echo $project->run([
     'engine' => 'turbowarp',
     'width' => 900,
-    'height' => 650
+    'height' => 650,
 ]);
 ```
 
-Player metodu bir iframe üretir; Scratch görüntülenme sayısını artırmayı amaçlayan özel bir fonksiyon değildir.
+> Player helper'ları iframe üretir. Scratch görüntülenme sayısını artırmak için tasarlanmış özel bir özellik değildir.
 
 ---
 
-## 6. Project Analyzer
+## User API
 
 ```php
-$project = $scratch->project(104);
+$user = $scratch->user('griffpatch');
 
-$analysis = $project->analyze();
-
-print_r($analysis->summary());
+$data = $user->get();
+$projects = $user->projects();
+$followers = $user->followers();
+$following = $user->following();
+$favorites = $user->favorites();
 ```
 
-Bu özellik proje JSON'unu inceleyerek sprite, block, costume, sound, variable, Cloud Variable ve extension gibi bilgileri analiz etmek için kullanılabilir.
+Auth ile:
+
+```php
+$user = $session->user('BirKullanici');
+
+$user->follow();
+$user->unfollow();
+```
+
+Kendi profiliniz üzerinde desteklenen alanları güncelleyebilirsiniz:
+
+```php
+$me = $session->user($session->username());
+
+$me->setBio('Yeni bio');
+$me->setStatus('Yeni durum');
+```
 
 ---
 
-## 7. Studio API
+## Studio API
 
 ```php
 $studio = $scratch->studio(123456);
-
-echo $studio->title();
 
 $projects = $studio->projects();
 $curators = $studio->curators();
 $managers = $studio->managers();
 ```
 
-Yetkili stüdyo işlemleri:
+Auth ile:
 
 ```php
 $studio = $session->studio(123456);
@@ -304,35 +288,19 @@ $studio->setDescription('Yeni açıklama');
 
 ---
 
-## 8. Scratch Cloud Variables
-
-Scratch projesindeki Cloud Variable ile PHP arasında veri aktarımı:
+## Scratch Cloud Variables
 
 ```php
 $cloud = $session->cloud(104);
-
 $cloud->connect();
 
 $value = $cloud->getRemote('score');
-
-echo $value;
-
-$cloud->disconnect();
-```
-
-Değer yazma ve doğrulama:
-
-```php
-$cloud->connect();
-
 $result = $cloud->setVerified('score', 500);
 
-print_r($result);
-
 $cloud->disconnect();
 ```
 
-`setVerified()` yalnızca local cache'i değiştirmek yerine Scratch tarafındaki değişikliği doğrulamaya çalışır.
+`setVerified()` yalnızca local cache'i güncellemek yerine mümkün olduğunda Scratch tarafındaki değeri de doğrular.
 
 ### Değişiklik dinleme
 
@@ -346,13 +314,9 @@ $cloud->onVariable('score', function ($value, $variable) {
 $cloud->listen();
 ```
 
-Uzun süre çalışan `listen()` işlemlerini normal web request'i yerine CLI/worker süreçlerinde kullanmanız önerilir.
+Uzun süre çalışan listener'ları normal HTTP request yerine CLI/worker süreçlerinde kullanmak daha uygundur.
 
----
-
-## 9. CloudRequests — Scratch → PHP RPC
-
-Scratch projenizin PHP backend'e istek göndermesine uygun basit bir katman:
+### CloudRequests
 
 ```php
 $cloud = $session->cloud(104);
@@ -367,69 +331,29 @@ $rpc->on('sum', function (array $params) {
 $rpc->run();
 ```
 
-Bu özellik Scratch projesi ile web backend'iniz arasında özel protokoller geliştirmeniz için temel sağlar.
-
----
-
-## 10. CloudDatabase
-
-Küçük verileri Cloud Variable üzerinde saklamak için:
+### CloudDatabase
 
 ```php
-$cloud = $session->cloud(104);
-$cloud->connect();
-
 $db = $cloud->database('db');
 
 $db->set('level', 12);
-
 echo $db->get('level');
-
 $db->delete('level');
-
-$cloud->disconnect();
 ```
 
-Bu gerçek bir MySQL/SQLite veritabanının yerini tutmaz. Scratch Cloud Variable limitleri nedeniyle küçük durum verileri içindir.
+CloudDatabase, MySQL/SQLite yerine kullanılacak genel amaçlı bir veritabanı değildir; Scratch Cloud limitlerine uygun küçük durum verileri içindir.
 
 ---
 
-## 11. Arama, Explore ve mesajlar
+## Registration Assistant
 
-```php
-$projects = $scratch->searchProjects('platformer');
-$trending = $scratch->exploreProjects('*', 'trending');
-```
-
-Oturum üzerinden:
-
-```php
-$messages = $session->messages();
-$adminMessages = $session->adminMessages();
-
-$studios = $session->searchStudios('game');
-$news = $session->news();
-```
-
----
-
-## 12. Registration Assistant
-
-ScratchByPHP CAPTCHA'yı otomatik çözmez veya atlamaz.
+Registration Assistant CAPTCHA çözmez veya atlamaz. Kullanıcı kayıt işlemini Scratch'in resmî sayfasında tamamlar.
 
 ```php
 $registration = $scratch->registration();
 
-$result = $registration->generateAvailableCredentials(
-    'ScratchUser'
-);
+$result = $registration->generateAvailableCredentials('ScratchUser');
 
-print_r($result);
-```
-
-Kullanıcı resmi Scratch kayıt sayfasında CAPTCHA'yı kendisi tamamlar:
-
-```php
 echo $registration->joinUrl();
 ```
 
@@ -438,50 +362,16 @@ Credential JSON:
 ```php
 $json = $registration->credentialsJson(
     'ScratchUser_ABC123',
-    'MyStrongPassword123!',
+    'StrongPassword123!',
     'mail@example.com'
 );
 ```
 
-JSON'u geri okumak:
-
-```php
-$credentials = $registration->parseCredentialsJson(
-    file_get_contents('scratch-account.json')
-);
-```
-
-Credential JSON düz metin parola içerebilir; gizli tutulmalıdır.
+> Credential JSON formatında parola bilerek plaintext tutulabilir. Bu dosyaları parola dosyası gibi koruyun ve repoya commit etmeyin.
 
 ---
 
-## 13. Retry, proxy ve debug
-
-```php
-$session->setRetries(3, 250);
-
-$session->setProxy(
-    'http://127.0.0.1:8080'
-);
-
-$session->enableLogger(
-    __DIR__ . '/scratchbyphp.log'
-);
-```
-
-Auth teşhisi:
-
-```php
-print_r(
-    $session->authDiagnostics(104)
-);
-```
-
-Token değerlerini ekrana veya loglara yazmamaya dikkat edin.
-
----
-
-## 14. Hata yakalama
+## Hata yönetimi
 
 ```php
 use ScratchByPHP\Exceptions\ApiException;
@@ -498,25 +388,106 @@ try {
 
 ---
 
-## Gereksinimler
+## Güvenlik
 
-- PHP 8.1+
-- cURL extension
-- OpenSSL extension
-- JSON extension
-- Cloud bağlantıları için dışarı WebSocket/TLS erişimi olan bir sunucu
+ScratchByPHP `v0.5.1` ile auth istemcisinde ek güvenlik sertleştirmeleri içerir:
+
+- Credential taşıyan HTTP istekleri HTTPS Scratch hostlarıyla sınırlandırılır.
+- Auth taşıyan isteklerde otomatik cross-host redirect engellenir.
+- Logger token/session/cookie gibi hassas alanları maskeler.
+- Session ID için uzunluk ve kontrol karakteri doğrulaması yapılır.
+- Sıkıştırılmış session payload decode boyutu sınırlandırılır.
+
+Ayrıca:
+
+- `.env`, password, session ID ve token değerlerini commit etmeyin.
+- Kullanıcıdan gelen filesystem path'lerini doğrudan indirme/yükleme metodlarına vermeyin.
+- Kendi hesabınız veya işlem yapmaya yetkili olduğunuz hesaplarla kullanın.
+- CAPTCHA/anti-abuse mekanizmalarını atlatmak, spam veya yapay etkileşim üretmek için kullanmayın.
+
+Detaylar: [SECURITY.md](SECURITY.md)
+
+---
+
+## Dokümantasyon
+
+Ana dil **Türkçe**dir. İngilizce dokümantasyon da birlikte tutulur.
+
+- 🇹🇷 [Türkçe Dokümantasyon](https://scratchbyphp.github.io/scratchbyphp/)
+- 🇬🇧 [English Documentation](https://scratchbyphp.github.io/scratchbyphp/en.html)
+- 🎨 [Brand Assets](docs/brand.html)
+- 🧪 [`examples/`](examples/)
+- 🧰 [`tests/`](tests/)
+
+Dokümantasyondaki kod snippet'lerinde tek tık **Kopyala** butonu bulunur.
+
+---
+
+## Proje yapısı
+
+```text
+ScratchByPHP/
+├── .github/             # CI, Pages, issue ve PR şablonları
+├── docs/                # TR + EN GitHub Pages dokümantasyonu
+│   └── assets/brand/    # Logo / marka dosyaları
+├── examples/            # Başlangıç örnekleri
+├── src/                 # Kütüphane kaynak kodu
+├── tests/               # Smoke + security testleri
+├── README.md            # Türkçe ana README
+├── README.en.md         # English README
+├── SECURITY.md
+├── CONTRIBUTING.md
+├── THIRD_PARTY_NOTICES.md
+├── CHANGELOG.md
+├── LICENSE
+└── composer.json
+```
+
+---
+
+## Marka dosyaları
+
+Repo genelinde standart logo isimleri şunlardır:
+
+```text
+docs/assets/brand/
+├── scratchbyphp-app-icon-light.png
+├── scratchbyphp-app-icon-dark.png
+├── scratchbyphp-icon-light.png
+├── scratchbyphp-logo-compact-light.png
+├── scratchbyphp-logo-compact-dark.png
+├── scratchbyphp-logo-full-light.png
+└── scratchbyphp-logo-full-dark.png
+```
+
+README ve dokümantasyon bu isimleri referans alır.
+
+---
+
+## Test ve geliştirme
+
+```bash
+composer install
+composer validate --strict
+composer lint
+php tests/smoke.php
+php tests/security.php
+```
+
+GitHub Actions, PHP **8.1–8.4** üzerinde otomatik kontrol çalıştıracak şekilde hazırlanmıştır.
 
 ---
 
 ## Packagist'e yayınlama
 
-Repo GitHub'a yüklendikten sonra:
+GitHub'a push ettikten sonra bir release/tag oluşturun:
 
-1. GitHub repository oluşturun.
-2. Bu klasörün içeriğini repo köküne yükleyin.
-3. `v0.5.1` tag'i oluşturun.
-4. Packagist'te **Submit** ile GitHub repo URL'sini ekleyin.
-5. Bundan sonra kullanıcılar:
+```bash
+git tag v0.5.1
+git push origin v0.5.1
+```
+
+Ardından repository'yi Packagist'e ekleyin. Yayın sonrasında kullanıcılar:
 
 ```bash
 composer require scratchbyphp/scratchbyphp
@@ -524,82 +495,43 @@ composer require scratchbyphp/scratchbyphp
 
 ile kurabilir.
 
-Yeni sürüm yayınlarken semantic versioning kullanmanız önerilir:
+Semantic Versioning yaklaşımı önerilir:
 
 ```text
-0.5.1  yeni özellikler
-0.5.1  hata düzeltmeleri
+0.5.1  hata/güvenlik düzeltmeleri
 0.6.0  yeni özellikler
 1.0.0  kararlı public API
 ```
 
 ---
 
-## Projenin vizyonu
+## Teşekkür ve kaynaklar
 
-Scratch'ın güçlü topluluğu ve yaratıcı proje modeli var. PHP tarafında ise web siteleri, paneller, backend servisleri ve geleneksel hosting altyapıları çok yaygın.
+ScratchByPHP'nin API tasarımı ve özellik kapsamı geliştirilirken **TimMcCool tarafından geliştirilen [scratchattach](https://github.com/TimMcCool/scratchattach)** önemli bir referans ve ilham kaynağı olmuştur.
 
-ScratchByPHP bu iki dünyayı birbirine yaklaştırmayı hedefler:
+`scratchattach`, Python tarafında kapsamlı bir Scratch API ve Cloud araç setidir ve MIT lisansı ile yayımlanmaktadır.
 
-```text
-Scratch Project
-      ↕
-Cloud Variables / Scratch API
-      ↕
-ScratchByPHP
-      ↕
-PHP Website / Backend / Panel / Application
-```
-
-Amaç, bir PHP geliştiricisinin Scratch'e bağlanmak için protokol ayrıntılarıyla saatlerce uğraşmak yerine birkaç okunabilir metodla işe başlayabilmesidir.
-
----
-
-## Güvenlik ve sorumlu kullanım
-
-### v0.5.1 güvenlik korumaları
-
-- Authenticated HTTP istemcisi credential taşıyan istekleri yalnızca HTTPS Scratch domainlerine gönderir.
-- Credential taşıyan HTTP isteklerinde otomatik redirect kapalıdır.
-- Logger token/session/cookie gibi gizli değerleri `[REDACTED]` olarak yazar.
-- Session ID boyutu ve kontrol karakterleri doğrulanır; decode edilen sıkıştırılmış payload 64 KiB ile sınırlandırılır.
-- Dosya indirme metoduna web kullanıcısından gelen path'i doğrudan vermeyin. Hedef yolu uygulamanızın kendisi belirlesin.
-- Account JSON'un plaintext parola içermesi bilinçli tasarımdır; bu dosyayı `.env` veya parola dosyası gibi gizli tutun ve public web dizinine koymayın.
-
-
-ScratchByPHP güçlü oturum ve yazma fonksiyonları içerir. Kendi hesabınız veya işlem yapmaya yetkili olduğunuz hesaplarla kullanın.
-
-- CAPTCHA veya anti-abuse kontrollerini atlatmayın.
-- Kullanıcı parolalarını loglamayın.
-- Session ID/X-Token bilgilerini paylaşmayın.
-- Scratch topluluk kurallarına ve kullanım şartlarına uyun.
-- Toplu spam, yapay etkileşim veya kötüye kullanım için kullanmayın.
+ScratchByPHP bağımsız bir PHP uygulamasıdır; scratchattach'ın resmî PHP portu değildir. Ayrıntılı bildirim için [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) dosyasına bakın.
 
 ---
 
 ## Katkı
 
-Katkı yapmak isterseniz [CONTRIBUTING.md](CONTRIBUTING.md) dosyasına bakın.
+Pull request ve issue'lar açıktır. Katkıda bulunmadan önce [CONTRIBUTING.md](CONTRIBUTING.md) dosyasını inceleyin.
 
-Bug report veya feature request için GitHub Issues kullanılabilir.
+Hata bildirirken mümkünse:
+
+- ScratchByPHP sürümü
+- PHP sürümü
+- minimal örnek kod
+- alınan exception/HTTP sonucu
+
+bilgilerini ekleyin; **credential paylaşmayın**.
 
 ---
-
-
-## Teşekkür ve kaynaklar
-
-ScratchByPHP'nin API tasarımı ve özellik kapsamı geliştirilirken
-[TimMcCool/scratchattach](https://github.com/TimMcCool/scratchattach) önemli bir
-**referans ve ilham kaynağı** olmuştur. `scratchattach`, Python tarafında geniş bir
-Scratch API/Cloud araç setidir ve MIT lisansı ile yayımlanmaktadır.
-
-ScratchByPHP bağımsız bir PHP uygulamasıdır; scratchattach'ın resmî PHP portu değildir.
-Daha ayrıntılı bilgi için [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) dosyasına bakın.
 
 ## Lisans
 
-MIT. Ayrıntı için [LICENSE](LICENSE).
-
----
+[MIT License](LICENSE)
 
 ScratchByPHP, Scratch Foundation ile bağlantılı değildir. “Scratch” ve ilgili markalar ilgili sahiplerine aittir.

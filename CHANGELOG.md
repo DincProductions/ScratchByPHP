@@ -2,6 +2,9 @@
 
 ## 0.5.1
 
+- GitHub README redesigned in Turkish and English
+- README and documentation references standardized to the final ScratchByPHP brand filenames
+
 - Brand assets added to documentation
 - scratchattach / TimMcCool attribution added in THIRD_PARTY_NOTICES.md
 
