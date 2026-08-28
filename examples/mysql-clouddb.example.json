@@ -1,0 +1,15 @@
+{
+  "host": "localhost",
+  "port": 3306,
+  "username": "scratch_user",
+  "password": "CHANGE_ME",
+  "database": "scratch_app",
+  "table": "scratch_cloud",
+  "mode": "kv",
+  "key_column": "cloud_key",
+  "value_column": "cloud_value",
+  "updated_at_column": "updated_at",
+  "upsert": true,
+  "auto_create": false,
+  "charset": "utf8mb4"
+}

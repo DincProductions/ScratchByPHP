@@ -1,0 +1,3 @@
+<?php
+namespace ScratchByPHP\DTO;
+final class CloudChange implements \JsonSerializable { public function __construct(public readonly string $name,public readonly string $value,public readonly ?string $user=null,public readonly int|float|string|null $timestamp=null,public readonly ?string $verb=null){} public static function fromArray(array $a):self{return new self((string)($a['name']??''),(string)($a['value']??''),$a['user']??null,$a['timestamp']??null,$a['verb']??null);} public function toArray():array{return get_object_vars($this);} public function jsonSerialize():mixed{return $this->toArray();} }

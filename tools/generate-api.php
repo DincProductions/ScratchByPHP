@@ -1,0 +1,3 @@
+<?php
+require dirname(__DIR__).'/autoload.php';
+$base=dirname(__DIR__).'/src';$out=dirname(__DIR__).'/docs/api.md';$lines=["# ScratchByPHP API Reference\n","Generated from public PHP methods.\n"];$it=new RecursiveIteratorIterator(new RecursiveDirectoryIterator($base));foreach($it as $f){if(!$f->isFile()||$f->getExtension()!=='php')continue;$rel=str_replace($base.DIRECTORY_SEPARATOR,'',$f->getPathname());$code=file_get_contents($f->getPathname());preg_match_all('/public function\s+([A-Za-z0-9_]+)\s*\(([^)]*)\)/',$code,$m,PREG_SET_ORDER);if(!$m)continue;$lines[]="## `{$rel}`\n";foreach($m as $x)$lines[]="- `{$x[1]}({$x[2]})`";$lines[]='';}file_put_contents($out,implode("\n",$lines));echo "Generated: {$out}\n";

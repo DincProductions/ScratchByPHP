@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ScratchByPHP — Türkçe Dokümantasyon</title><meta name="description" content="PHP ile Scratch arasında köprü: ScratchByPHP Türkçe dokümantasyon.">
+<link rel="stylesheet" href="assets/style.css"></head><body>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="index.html"><img src="assets/brand/scratchbyphp-icon-light.png" alt="" width="34" height="34">ScratchByPHP</a><div class="spacer"></div><div class="lang"><a class="pill" href="index.html">TR</a><a class="pill" href="en.html">EN</a><a class="pill" href="https://github.com/scratchbyphp/scratchbyphp">GitHub</a></div></div></header>
+<div class="layout"><aside class="sidebar"><input id="doc-search" placeholder="Dokümanda ara..."><nav class="nav"><a href="#baslangic">Başlangıç</a><a href="#composer">Composer kurulumu</a><a href="#public">Public API</a><a href="#auth">Giriş ve Session</a><a href="#user">User API</a><a href="#project">Project API</a><a href="#studio">Studio API</a><a href="#cloud">Cloud Variables</a><a href="#rpc">CloudRequests</a><a href="#database">CloudDatabase</a><a href="#search">Arama ve mesajlar</a><a href="#registration">Registration</a><a href="#player">Project Player</a><a href="#errors">Hata yönetimi</a><a href="#security">Güvenlik</a><a href="#packagist">GitHub & Packagist</a></nav></aside>
+<main><section class="section" id="v080"><h2>v0.8.0 SDK Güncellemesi</h2><p>Collection, Pagination, Cache, DTO, Comment modeli, Batch/Parallel HTTP, Cloud 2.0, Analyzer 2.0, SB3 araçları, CLI/Doctor, Fake testing ve geliştirici araçları eklendi.</p><div class="callout ok"><strong>Test merkezi:</strong> Paketi sunucuya açtıktan sonra <code>test-panels/index.php</code> üzerinden özellikleri kategori kategori test edebilirsiniz.</div><pre><code>$scratch = new ScratchByPHP\Scratch([
+    'timeout' => 15,
+    'retries' => 2,
+]);
+
+$projects = $scratch->user('griffpatch')
+    ->projectsPaginator()
+    ->limit(20)
+    ->page(1)
+    ->get();</code></pre></section>
+<section class="hero"><div class="badge">Türkçe ana dokümantasyon</div><h1>PHP ile Scratch arasında köprü.</h1><p>ScratchByPHP; Scratch kullanıcılarını, projelerini, stüdyolarını, oturum işlemlerini ve Cloud Variables altyapısını PHP uygulamalarına bağlamayı kolaylaştırır.</p><div class="hero-actions"><a class="btn btn-primary" href="#baslangic">5 dakikada başla</a><a class="btn btn-secondary" href="en.html">English docs</a></div></section>
+
+<section class="section" id="baslangic"><h2>ScratchByPHP nedir?</h2><p class="lead">Web siteleri, yönetim panelleri ve PHP backend'leri ile Scratch arasında okunabilir bir API katmanı sağlar.</p><div class="grid">
+<div class="feature"><strong>Public API</strong><span class="muted">Proje, kullanıcı ve stüdyo verilerini giriş yapmadan okuyun.</span></div>
+<div class="feature"><strong>Authenticated API</strong><span class="muted">Kendi hesabınızla yorum, stüdyo ve diğer yetkili işlemleri yapın.</span></div>
+<div class="feature"><strong>Scratch Cloud</strong><span class="muted">Cloud Variables ile PHP backend arasında veri alışverişi kurun.</span></div>
+<div class="feature"><strong>PHP-first</strong><span class="muted">Shared hosting veya klasik PHP projelerine kolayca eklenebilen yapı.</span></div>
+</div>
+<div class="callout">ScratchByPHP resmî Scratch SDK'sı değildir. Scratch endpoint'leri değiştiğinde bazı metodların güncellenmesi gerekebilir.</div>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>&lt;?php
+require __DIR__ . '/vendor/autoload.php';
+
+use ScratchByPHP\Scratch;
+
+$scratch = new Scratch();
+
+$project = $scratch-&gt;project(104);
+
+echo $project-&gt;title();
+echo $project-&gt;views();</code></pre></div>
+</section>
+
+<section class="section" id="composer"><h2>Composer ile kurulum</h2><p>Composer, PHP'nin paket yöneticisidir. Node.js'teki <span class="inline">npm</span> gibi düşünebilirsiniz.</p>
+<div class="code-wrap"><div class="code-head"><span>Terminal</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>composer require scratchbyphp/scratchbyphp</code></pre></div>
+<p>Ardından tek satır autoload yeterlidir:</p>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>&lt;?php
+require __DIR__ . '/vendor/autoload.php';
+
+use ScratchByPHP\Scratch;
+
+$scratch = new Scratch();</code></pre></div>
+<div class="callout ok"><strong>Composer kullanmak zorunda mıyım?</strong><br>Hayır. ZIP ile indirirseniz repo içindeki <span class="inline">autoload.php</span> dosyasını kullanabilirsiniz.</div>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>require __DIR__ . '/scratchbyphp/autoload.php';</code></pre></div>
+</section>
+
+<section class="section" id="public"><h2>Public API <span class="badge">LOGIN YOK</span></h2><p>Herkese açık Scratch verilerini okumak için hesap girişi gerekmez.</p>
+<h3>Proje</h3>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$project = $scratch-&gt;project(104);
+
+echo $project-&gt;title();
+echo $project-&gt;author();
+echo $project-&gt;views();
+echo $project-&gt;loves();
+echo $project-&gt;favorites();
+
+$comments = $project-&gt;comments();
+$remixes = $project-&gt;remixes();</code></pre></div>
+<h3>Kullanıcı</h3>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$user = $scratch-&gt;user('griffpatch');
+
+$data = $user-&gt;get();
+$projects = $user-&gt;projects();
+$followers = $user-&gt;followers();
+$following = $user-&gt;following();</code></pre></div>
+<h3>Stüdyo</h3>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$studio = $scratch-&gt;studio(123456);
+
+echo $studio-&gt;title();
+
+$projects = $studio-&gt;projects();
+$curators = $studio-&gt;curators();
+$managers = $studio-&gt;managers();</code></pre></div>
+</section>
+
+<section class="section" id="auth"><h2>Giriş ve Session <span class="badge auth">AUTH</span></h2>
+<p>Yazma/yönetim işlemlerinde önce Scratch hesabıyla oturum açılır.</p>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$session = $scratch-&gt;login(
+    'KullaniciAdi',
+    'Sifre'
+);
+
+echo $session-&gt;username();</code></pre></div>
+<p>Session üzerinden ilgili nesneyi alın:</p>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$project = $session-&gt;project(104);
+$user    = $session-&gt;user('BirKullanici');
+$studio  = $session-&gt;studio(123456);
+$cloud   = $session-&gt;cloud(104);</code></pre></div>
+<h3>Session ID ile giriş</h3>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$session = $scratch-&gt;loginWithSessionId(
+    getenv('SCRATCH_SESSION_ID')
+);</code></pre></div>
+<div class="callout warn">Parola, session ID, X-Token veya CSRF değerlerini GitHub'a commit etmeyin.</div>
+</section>
+
+<section class="section" id="user"><h2>User API</h2>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$user = $session-&gt;user('BirKullanici');
+
+$user-&gt;follow();
+$user-&gt;unfollow();
+
+$user-&gt;postComment('Merhaba!');</code></pre></div>
+<p>Kendi profiliniz üzerinde:</p>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$me = $session-&gt;user($session-&gt;username());
+
+$me-&gt;setBio('Yeni bio');
+$me-&gt;setStatus('Yeni durum');</code></pre></div>
+</section>
+
+<section class="section" id="project"><h2>Project API</h2>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$project = $session-&gt;project(104);
+
+$project-&gt;love();
+$project-&gt;favorite();
+
+$project-&gt;postComment('PHP tarafından gönderildi.');
+
+$project-&gt;share();
+$project-&gt;unshare();</code></pre></div>
+<h3>Proje analizi</h3>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$analysis = $scratch-&gt;project(104)-&gt;analyze();
+
+print_r($analysis-&gt;summary());</code></pre></div>
+</section>
+
+<section class="section" id="studio"><h2>Studio API</h2>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$studio = $session-&gt;studio(123456);
+
+$studio-&gt;addProject(104);
+$studio-&gt;removeProject(104);
+
+$studio-&gt;inviteCurator('Kullanici');
+$studio-&gt;promoteCurator('Kullanici');
+$studio-&gt;removeCurator('Kullanici');
+
+$studio-&gt;setTitle('Yeni isim');
+$studio-&gt;setDescription('Yeni açıklama');</code></pre></div>
+</section>
+
+<section class="section" id="cloud"><h2>Cloud Variables <span class="badge cloud">CLOUD</span></h2>
+<p>Scratch projesindeki Cloud Variable'ları PHP'den okuyup yazabilirsiniz.</p>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$cloud = $session-&gt;cloud(104);
+$cloud-&gt;connect();
+
+$value = $cloud-&gt;getRemote('score');
+
+$result = $cloud-&gt;setVerified('score', 500);
+
+$cloud-&gt;disconnect();</code></pre></div>
+<h3>Canlı dinleme</h3>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$cloud-&gt;connect();
+
+$cloud-&gt;onVariable('score', function ($value, $variable) {
+    echo 'Yeni değer: ' . $value;
+});
+
+$cloud-&gt;listen();</code></pre></div>
+<div class="callout warn">Sürekli çalışan <span class="inline">listen()</span> işlemlerini web request'inden çok CLI/worker süreçlerinde kullanmak daha uygundur.</div>
+</section>
+
+<section class="section" id="rpc"><h2>CloudRequests</h2>
+<p>Scratch projesinden PHP backend'e basit RPC tarzı istekler gönderin.</p>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$cloud = $session-&gt;cloud(104);
+$cloud-&gt;connect();
+
+$rpc = $cloud-&gt;requests('request', 'response');
+
+$rpc-&gt;on('sum', function (array $params) {
+    return array_sum($params);
+});
+
+$rpc-&gt;run();</code></pre></div>
+</section>
+
+<section class="section" id="database"><h2>CloudDatabase</h2>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$cloud = $session-&gt;cloud(104);
+$cloud-&gt;connect();
+
+$db = $cloud-&gt;database('db');
+
+$db-&gt;set('level', 12);
+echo $db-&gt;get('level');
+$db-&gt;delete('level');
+
+$cloud-&gt;disconnect();</code></pre></div>
+<div class="callout">CloudDatabase küçük durum verileri içindir; MySQL/SQLite yerine kullanılacak genel amaçlı bir veritabanı değildir.</div>
+</section>
+
+<section class="section" id="search"><h2>Arama, Explore ve mesajlar</h2>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$projects = $scratch-&gt;searchProjects('platformer');
+$trending = $scratch-&gt;exploreProjects('*', 'trending');
+
+$messages = $session-&gt;messages();
+$studios = $session-&gt;searchStudios('game');
+$news = $session-&gt;news();</code></pre></div>
+</section>
+
+<section class="section" id="registration"><h2>Registration Assistant</h2>
+<p>Rastgele credential üretimi ve username kontrolü sağlar. CAPTCHA'yı çözmez veya atlamaz.</p>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$registration = $scratch-&gt;registration();
+
+$result = $registration-&gt;generateAvailableCredentials(
+    'ScratchUser'
+);
+
+echo $registration-&gt;joinUrl();</code></pre></div>
+<h3>JSON credential profili</h3>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$json = $registration-&gt;credentialsJson(
+    'ScratchUser_ABC123',
+    'StrongPassword123!',
+    'mail@example.com'
+);
+
+$data = $registration-&gt;parseCredentialsJson($json);</code></pre></div>
+<div class="callout warn">Credential JSON düz metin parola içerebilir. Dosyayı parola gibi koruyun.</div>
+</section>
+
+<section class="section" id="player"><h2>Project Player</h2>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>$project = $scratch-&gt;project(104);
+
+echo $project-&gt;player(800, 600);</code></pre></div>
+<p>TurboWarp:</p>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>echo $project-&gt;run([
+    'engine' =&gt; 'turbowarp',
+    'width' =&gt; 900,
+    'height' =&gt; 650
+]);</code></pre></div>
+<p>Bu metodlar iframe üretir; Scratch görüntülenme sayısını artırmak için tasarlanmış özel fonksiyonlar değildir.</p>
+</section>
+
+<section class="section" id="errors"><h2>Hata yönetimi</h2>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>use ScratchByPHP\Exceptions\LoginException;
+use ScratchByPHP\Exceptions\ApiException;
+
+try {
+    $session = $scratch-&gt;login($username, $password);
+} catch (LoginException $e) {
+    echo 'Giriş başarısız: ' . $e-&gt;getMessage();
+} catch (ApiException $e) {
+    echo 'API hatası: ' . $e-&gt;getMessage();
+}</code></pre></div>
+</section>
+
+<section class="section" id="security"><h2>Güvenlik ve sorumlu kullanım</h2><div class="callout ok"><strong>v0.8.0 hardening:</strong> Auth istekleri yalnız HTTPS Scratch domainlerine gider; auth redirectleri kapalıdır; logger secret değerleri maskeler; session decoder 64 KiB ile sınırlıdır. Plaintext hesap JSON formatı bilinçli olarak korunur.</div>
+<ul><li>Credential/token bilgilerini loglamayın.</li><li>Kendi hesabınız veya yetkili olduğunuz hesapları kullanın.</li><li>CAPTCHA/anti-abuse kontrollerini atlatmayın.</li><li>Spam veya yapay etkileşim üretmek için kullanmayın.</li><li>Scratch topluluk kurallarına uyun.</li></ul>
+</section>
+
+<section class="section" id="packagist"><h2>GitHub ve Packagist'e yayınlama</h2>
+<ol><li>Repo içeriğini GitHub'a push edin.</li><li>GitHub Pages için <span class="inline">Settings → Pages → GitHub Actions</span> seçin.</li><li><span class="inline">v0.8.0</span> tag'i oluşturun.</li><li>Packagist'te repository URL'nizi Submit ile ekleyin.</li></ol>
+<div class="code-wrap"><div class="code-head"><span>Terminal</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>git init
+git add .
+git commit -m "Initial ScratchByPHP release"
+git branch -M main
+git remote add origin https://github.com/scratchbyphp/scratchbyphp.git
+git push -u origin main
+
+git tag v0.8.0
+git push origin v0.8.0</code></pre></div>
+<p>Yayınlandıktan sonra:</p>
+<div class="code-wrap"><div class="code-head"><span>Terminal</span><button class="copy" data-label="Kopyala">Kopyala</button></div><pre><code>composer require scratchbyphp/scratchbyphp</code></pre></div>
+</section>
+
+
+<section class="section" id="credits">
+<h2>Teşekkür ve kaynaklar</h2>
+<p>ScratchByPHP'nin API tasarımı ve özellik kapsamı geliştirilirken
+<a href="https://github.com/TimMcCool/scratchattach">TimMcCool'un scratchattach projesi</a>
+önemli bir <strong>referans ve ilham kaynağı</strong> olmuştur. scratchattach MIT lisanslı
+bir Python Scratch API/Cloud araç setidir.</p>
+<p>ScratchByPHP bağımsız bir PHP uygulamasıdır; scratchattach'ın resmî PHP portu değildir.</p>
+</section>
+
+<div class="footer">ScratchByPHP v0.8.0 · MIT · Scratch Foundation ile bağlantılı değildir.</div>
+</main></div><script src="assets/docs.js"></script></body></html>

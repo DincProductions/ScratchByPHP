@@ -1,0 +1,71 @@
+{
+  "version": "0.8.5",
+  "release": "GitHub Ready",
+  "php_linted": 103,
+  "tests_passed": 12,
+  "tests_total": 12,
+  "documentation": {
+    "README.md": "rewritten for v0.8.5",
+    "README.en.md": "rewritten for v0.8.5",
+    "docs/llms.txt": "rewritten for v0.8.5 AI/LLM reference",
+    "test_panels_visible_version": "v0.8.5"
+  },
+  "v0.8.5_highlights": [
+    "CloudDB Pro -> MySQL",
+    "Turkish Studio Trending",
+    "Wizard Pro embedded control center",
+    "ProjectDiff summary/toArray compatibility",
+    "Watcher 2.0",
+    "Reliability/DX tooling"
+  ],
+  "tests": {
+    "tests/smoke.php": {
+      "exit_code": 0,
+      "output": "ScratchByPHP smoke test OK"
+    },
+    "tests/security.php": {
+      "exit_code": 0,
+      "output": "ScratchByPHP security smoke test OK"
+    },
+    "tests/v080.php": {
+      "exit_code": 0,
+      "output": "{\n    \"ok\": true,\n    \"checks\": {\n        \"version\": true,\n        \"collection\": true,\n        \"cache\": true,\n        \"fake\": true,\n        \"analyzer\": true\n    }\n}"
+    },
+    "tests/v080_matrix.php": {
+      "exit_code": 0,
+      "output": "{\n    \"ok\": true,\n    \"passed\": 29,\n    \"total\": 29,\n    \"tests\": {\n        \"01 config\\/version\": {\n            \"ok\": true\n        },\n        \"02 pagination\": {\n            \"ok\": true\n        },\n        \"03 models\\/collections\": {\n            \"ok\": true\n        },\n        \"04 comment model\": {\n            \"ok\": true\n        },\n        \"05 collection\": {\n            \"ok\": true\n        },\n        \"06 cache\": {\n            \"ok\": true\n        },\n        \"07 rate limiter\": {\n            \"ok\": true\n        },\n        \"08 batch\": {\n            \"ok\": true\n        },\n        \"09 parallel\": {\n            \"ok\": true\n        },\n        \"10 cloud manager\": {\n            \"ok\": true\n        },\n        \"11 cloud history\": {\n            \"ok\": true\n        },\n        \"12 cloud database 2\": {\n            \"ok\": true\n        },\n        \"13 cloud requests 2\": {\n            \"ok\": true\n        },\n        \"14 watcher\": {\n            \"ok\": true\n        },\n        \"15 analyzer 2\": {\n            \"ok\": true\n        },\n        \"16 project diff\": {\n            \"ok\": true\n        },\n        \"17 sb3 tools\": {\n            \"ok\": true\n        },\n        \"18 dto\": {\n            \"ok\": true\n        },\n        \"19 ide\\/phpdoc surface\": {\n            \"ok\": true\n        },\n        \"20 phpstan\": {\n            \"ok\": true\n        },\n        \"21 phpunit\": {\n            \"ok\": true\n        },\n        \"22 fake\": {\n            \"ok\": true\n        },\n        \"23 psr bridges\": {\n            \"ok\": true\n        },\n        \"24 laravel bridge\": {\n            \"ok\": true\n        },\n        \"26 cli\": {\n            \"ok\": true\n        },\n        \"27 doctor\": {\n            \"ok\": true\n        },\n        \"28 debug\": {\n            \"ok\": true\n        },\n        \"29 api checker\": {\n            \"ok\": true\n        },\n        \"30 api docs generator\": {\n            \"ok\": true\n        }\n    }\n}"
+    },
+    "tests/v082.php": {
+      "exit_code": 0,
+      "output": "ScratchByPHP v0.8.5 compatibility test OK"
+    },
+    "tests/v082_matrix.php": {
+      "exit_code": 0,
+      "output": "{\n    \"ok\": true,\n    \"passed\": 8,\n    \"total\": 8,\n    \"tests\": {\n        \"Watcher 2.0\": {\n            \"ok\": true\n        },\n        \"Cache 2.0\": {\n            \"ok\": true\n        },\n        \"Batch 2.0 surface\": {\n            \"ok\": true\n        },\n        \"Request Metrics\": {\n            \"ok\": true\n        },\n        \"Retry Policy / Circuit Breaker\": {\n            \"ok\": true\n        },\n        \"Doctor 2.0\": {\n            \"ok\": true\n        },\n        \"SB3 Validator\": {\n            \"ok\": true\n        },\n        \"Scratch API Wizard\": {\n            \"ok\": true\n        }\n    }\n}"
+    },
+    "tests/v085.php": {
+      "exit_code": 0,
+      "output": "ScratchByPHP v0.8.5 feature test OK"
+    },
+    "tests/v085_wizard.php": {
+      "exit_code": 0,
+      "output": "ScratchByPHP v0.8.5 Wizard feature test OK"
+    },
+    "tests/project_diff.php": {
+      "exit_code": 0,
+      "output": "ScratchByPHP ProjectDiff regression test OK"
+    },
+    "tests/turkish_studio_discovery.php": {
+      "exit_code": 0,
+      "output": "ScratchByPHP Turkish studio discovery surface test OK"
+    },
+    "tests/watcher.php": {
+      "exit_code": 0,
+      "output": "ScratchByPHP watcher regression test OK"
+    },
+    "tests/wizard_pro.php": {
+      "exit_code": 0,
+      "output": "ScratchByPHP Wizard Pro local test OK"
+    }
+  }
+}

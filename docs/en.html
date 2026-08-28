@@ -1,0 +1,133 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ScratchByPHP — English Documentation</title><link rel="stylesheet" href="assets/style.css"></head><body>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="index.html"><img src="assets/brand/scratchbyphp-icon-light.png" alt="" width="34" height="34">ScratchByPHP</a><div class="spacer"></div><div class="lang"><a class="pill" href="index.html">TR</a><a class="pill" href="en.html">EN</a><a class="pill" href="https://github.com/scratchbyphp/scratchbyphp">GitHub</a></div></div></header>
+<div class="layout"><aside class="sidebar"><input id="doc-search" placeholder="Search docs..."><nav class="nav"><a href="#start">Getting started</a><a href="#composer">Composer</a><a href="#public">Public API</a><a href="#auth">Authentication</a><a href="#project">Projects</a><a href="#studio">Studios</a><a href="#cloud">Cloud Variables</a><a href="#rpc">CloudRequests</a><a href="#registration">Registration</a><a href="#security">Security</a><a href="#packagist">GitHub & Packagist</a></nav></aside><main><section class="section" id="v080"><h2>v0.8.0 SDK Expansion</h2><p>Introduces Collections, Pagination, Cache, DTOs, Comment models, Batch/Parallel HTTP, Cloud 2.0, Analyzer 2.0, SB3 tools, CLI/Doctor, fake testing, and developer tooling.</p><div class="callout ok"><strong>Test center:</strong> Open <code>test-panels/index.php</code> after deploying the package.</div></section>
+<section class="hero"><div class="badge">English documentation</div><h1>Bridge PHP and Scratch.</h1><p>ScratchByPHP provides a PHP-first layer for Scratch projects, users, studios, authenticated sessions, and Cloud Variables.</p><div class="hero-actions"><a class="btn btn-primary" href="#start">Start in 5 minutes</a><a class="btn btn-secondary" href="index.html">Türkçe</a></div></section>
+
+<section class="section" id="start"><h2>What is ScratchByPHP?</h2><p class="lead">A practical bridge between ordinary PHP websites/backends and Scratch.</p>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Copy">Copy</button></div><pre><code>&lt;?php
+require __DIR__ . '/vendor/autoload.php';
+
+use ScratchByPHP\Scratch;
+
+$scratch = new Scratch();
+$project = $scratch-&gt;project(104);
+
+echo $project-&gt;title();
+echo $project-&gt;views();</code></pre></div>
+<div class="callout">ScratchByPHP is not an official Scratch Foundation SDK. Scratch endpoints can change.</div></section>
+
+<section class="section" id="composer"><h2>Install with Composer</h2>
+<div class="code-wrap"><div class="code-head"><span>Terminal</span><button class="copy" data-label="Copy">Copy</button></div><pre><code>composer require scratchbyphp/scratchbyphp</code></pre></div>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Copy">Copy</button></div><pre><code>require __DIR__ . '/vendor/autoload.php';
+
+use ScratchByPHP\Scratch;
+
+$scratch = new Scratch();</code></pre></div></section>
+
+<section class="section" id="public"><h2>Public API</h2>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Copy">Copy</button></div><pre><code>$project = $scratch-&gt;project(104);
+
+echo $project-&gt;title();
+echo $project-&gt;author();
+echo $project-&gt;views();
+
+$user = $scratch-&gt;user('griffpatch');
+$projects = $user-&gt;projects();
+
+$studio = $scratch-&gt;studio(123456);
+$curators = $studio-&gt;curators();</code></pre></div></section>
+
+<section class="section" id="auth"><h2>Authentication</h2>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Copy">Copy</button></div><pre><code>$session = $scratch-&gt;login(
+    'Username',
+    'Password'
+);
+
+$project = $session-&gt;project(104);
+$studio = $session-&gt;studio(123456);
+$cloud = $session-&gt;cloud(104);</code></pre></div>
+<div class="callout warn">Never commit passwords, session IDs, X-Tokens, or CSRF values.</div></section>
+
+<section class="section" id="project"><h2>Projects</h2>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Copy">Copy</button></div><pre><code>$project = $session-&gt;project(104);
+
+$project-&gt;love();
+$project-&gt;favorite();
+$project-&gt;postComment('Hello from PHP');
+
+$analysis = $project-&gt;analyze();
+print_r($analysis-&gt;summary());</code></pre></div>
+<h3>Player</h3>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Copy">Copy</button></div><pre><code>echo $project-&gt;player(800, 600);
+
+echo $project-&gt;run([
+    'engine' =&gt; 'turbowarp',
+    'width' =&gt; 900,
+    'height' =&gt; 650
+]);</code></pre></div></section>
+
+<section class="section" id="studio"><h2>Studios</h2>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Copy">Copy</button></div><pre><code>$studio = $session-&gt;studio(123456);
+
+$studio-&gt;addProject(104);
+$studio-&gt;removeProject(104);
+$studio-&gt;inviteCurator('ExampleUser');
+$studio-&gt;setTitle('New title');</code></pre></div></section>
+
+<section class="section" id="cloud"><h2>Cloud Variables</h2>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Copy">Copy</button></div><pre><code>$cloud = $session-&gt;cloud(104);
+$cloud-&gt;connect();
+
+$value = $cloud-&gt;getRemote('score');
+$result = $cloud-&gt;setVerified('score', 500);
+
+$cloud-&gt;disconnect();</code></pre></div>
+<h3>Listen for changes</h3>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Copy">Copy</button></div><pre><code>$cloud-&gt;connect();
+
+$cloud-&gt;onVariable('score', function ($value) {
+    echo $value;
+});
+
+$cloud-&gt;listen();</code></pre></div></section>
+
+<section class="section" id="rpc"><h2>CloudRequests</h2>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Copy">Copy</button></div><pre><code>$cloud = $session-&gt;cloud(104);
+$cloud-&gt;connect();
+
+$rpc = $cloud-&gt;requests();
+
+$rpc-&gt;on('sum', function (array $params) {
+    return array_sum($params);
+});
+
+$rpc-&gt;run();</code></pre></div></section>
+
+<section class="section" id="registration"><h2>Registration Assistant</h2>
+<div class="code-wrap"><div class="code-head"><span>PHP</span><button class="copy" data-label="Copy">Copy</button></div><pre><code>$registration = $scratch-&gt;registration();
+
+$result = $registration-&gt;generateAvailableCredentials(
+    'ScratchUser'
+);
+
+echo $registration-&gt;joinUrl();</code></pre></div>
+<p>The library does not solve or bypass CAPTCHA.</p></section>
+
+<section class="section" id="security"><h2>Security and responsible use</h2><div class="callout ok"><strong>v0.8.0 hardening:</strong> credential-bearing HTTP requests are restricted to HTTPS Scratch domains, authenticated redirects are disabled, logger secrets are redacted, and session decompression is capped at 64 KiB. Plaintext account JSON remains intentional.</div><ul><li>Do not log credentials or tokens.</li><li>Use only accounts you own or are authorized to operate.</li><li>Do not bypass CAPTCHA or anti-abuse controls.</li><li>Do not use the library for spam or artificial engagement.</li></ul></section>
+
+<section class="section" id="packagist"><h2>GitHub & Packagist</h2><p>Push the repository, create a <span class="inline">v0.8.0</span> tag, then submit the GitHub repository to Packagist.</p>
+<div class="code-wrap"><div class="code-head"><span>Terminal</span><button class="copy" data-label="Copy">Copy</button></div><pre><code>composer require scratchbyphp/scratchbyphp</code></pre></div></section>
+
+
+<section class="section" id="credits">
+<h2>Credits and references</h2>
+<p>While designing ScratchByPHP's API and feature scope,
+<a href="https://github.com/TimMcCool/scratchattach">TimMcCool's scratchattach project</a>
+has been an important <strong>reference and source of inspiration</strong>.
+scratchattach is an MIT-licensed Python toolkit for Scratch APIs and Cloud features.</p>
+<p>ScratchByPHP is an independent PHP implementation and is not an official PHP port of scratchattach.</p>
+</section>
+
+<div class="footer">ScratchByPHP v0.8.0 · MIT · Not affiliated with Scratch Foundation.</div>
+</main></div><script src="assets/docs.js"></script></body></html>

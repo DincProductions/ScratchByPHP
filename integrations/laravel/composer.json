@@ -1,0 +1,14 @@
+{
+  "name": "scratchbyphp/laravel",
+  "description": "Optional Laravel bridge for ScratchByPHP",
+  "type": "library",
+  "require": {
+    "php": ">=8.1",
+    "scratchbyphp/scratchbyphp": "^0.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "ScratchByPHP\\Laravel\\": "src/"
+    }
+  }
+}

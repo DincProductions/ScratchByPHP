@@ -1,0 +1,5 @@
+* text=auto eol=lf
+/docs linguist-documentation
+/examples linguist-documentation
+/tests linguist-documentation
+*.zip binary

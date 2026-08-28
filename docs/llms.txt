@@ -1,0 +1,554 @@
+# ScratchByPHP — LLM / AI reference
+
+> Canonical machine-readable project summary for AI assistants and code-generation tools. Prefer repository source and current documentation when a method signature is uncertain.
+
+Canonical URLs
+- Homepage: https://www.blocklandin.com/scratchbyphp/
+- Documentation: https://www.blocklandin.com/scratchbyphp/docs
+- GitHub: https://github.com/scratchbyphp/scratchbyphp
+- Packagist: https://packagist.org/packages/scratchbyphp/scratchbyphp
+
+Package identity
+- Composer: scratchbyphp/scratchbyphp
+- PHP namespace: ScratchByPHP\\
+- Stable/documented version: 0.8.5
+- Minimum PHP: 8.1
+- Required PHP extensions: curl, openssl, json
+- Optional feature extensions: zip for SB3 archive features; mysqli for CloudDB Pro MySQL transfer
+- License: MIT
+- Primary documentation language: Turkish
+
+Project positioning
+ScratchByPHP is a PHP-first SDK/toolkit for integrating websites, dashboards, backend services and CLI/worker applications with the Scratch ecosystem. It covers public Scratch data, authenticated sessions/actions, Scratch Cloud Variables, CloudRequests/RPC, CloudDatabase, analysis/SB3 tooling, watchers, reliability helpers and an embeddable Wizard Pro UI.
+
+ScratchByPHP is independent and unofficial. It is not developed or supported by the Scratch Foundation. Internal/unofficial Scratch endpoints may change. TimMcCool/scratchattach is an important source of inspiration/reference; ScratchByPHP is not an official PHP port of scratchattach.
+
+Installation
+```bash
+composer require scratchbyphp/scratchbyphp
+```
+
+Bootstrap
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+use ScratchByPHP\\Scratch;
+
+$scratch = new Scratch();
+```
+
+Mental model
+Scratch project / user / studio / cloud
+        ↕
+Scratch API / authenticated session / WebSocket
+        ↕
+ScratchByPHP
+        ↕
+PHP website / dashboard / backend / worker / CLI
+
+Core objects
+- `Scratch`: public factories, discovery, configuration, cache, batch, watcher, metrics, health, Wizard, project comparison.
+- `Session`: authenticated Scratch account context.
+- `Project`: project data, comments/remixes, auth actions, Analyzer, SB3/player helpers.
+- `User`: user/profile/project/follower data and authenticated user actions.
+- `Studio`: studio data/collections and authenticated management actions.
+- `CloudConnection`: Scratch Cloud Variables and Cloud tools.
+- `CloudDatabase`: compact key/value encoding over Scratch Cloud Variables plus v0.8.5 MySQL bridge.
+- `CloudRequests`: request/response RPC layer over cloud variables.
+- `ProjectWatch`: polling-based project change detection.
+- `ScratchApiWizard`: embeddable web control center.
+- `TurkishTrending`: v0.8.5 Turkish-studio project discovery/ranking.
+
+Scratch public factories / top-level APIs
+- `Scratch::version(): string`
+- `Scratch::fake(): FakeScratch`
+- `$scratch->project($id): Project`
+- `$scratch->user($username): User`
+- `$scratch->studio($id): Studio`
+- `$scratch->registration()`
+- `$scratch->login($username,$password): Session`
+- `$scratch->loginWithSessionId($sessionId,$username=null): Session`
+- `$scratch->searchProjects(...)`
+- `$scratch->searchStudios(...)`
+- `$scratch->exploreProjects(...)`
+- `$scratch->turkishTrending($limit=20,$scan=120,$options=[]): array`
+- `$scratch->turkishTrendProjects(...)` alias
+- `$scratch->projects(array $ids): Collection`
+- `$scratch->batch(): BatchBuilder`
+- `$scratch->parallel(...)`
+- `$scratch->watch(): Watcher`
+- `$scratch->compareProjects($a,$b): ProjectDiff`
+- `$scratch->wizard(array $options=[]): ScratchApiWizard`
+- `$scratch->healthCheck(bool $network=false): array`
+- `$scratch->cache(...)`
+- `$scratch->cacheRules(...)`
+- `$scratch->metrics()`
+- `$scratch->retry()`
+- `$scratch->circuitBreaker()`
+- `$scratch->debug()`
+
+Public project example
+```php
+$project = $scratch->project(104);
+
+echo $project->title();
+echo $project->author();
+echo $project->views();
+echo $project->loves();
+echo $project->favorites();
+```
+
+Project API — important methods
+Read/model:
+- get()
+- refresh()
+- id()
+- title()
+- author()
+- views()
+- loves()
+- favorites()
+- comments(...)
+- commentsCollection(...)
+- commentsPaginator(...)
+- remixes(...)
+- remixInfo()
+- statsDto()
+- toArray()
+- toJson()
+- clearCache()
+
+Authenticated project actions:
+- love(), unlove()
+- favorite(), unfavorite()
+- postComment(...)
+- replyComment(...)
+- deleteComment(...)
+- reportComment(...)
+- share(), unshare()
+- setThumbnail(...)
+
+Project utilities:
+- analyze(): ProjectAnalyzer
+- rawJson()
+- downloadProjectJson(...)
+- downloadSb3(...)
+- sb3(): Sb3Archive
+- url(), embedUrl(), turbowarpUrl()
+- player(...), turbowarpPlayer(...), run([...])
+
+Player helpers generate iframe/embed markup. They are not designed for Scratch view-count manipulation.
+
+User API — important methods
+- get(), refresh(), username(), bio(), status(), country()
+- projects(), projectsCollection(), projectsPaginator()
+- followers(), following(), favorites(), studios(), activity()
+- messageCount()
+- profileDto()
+- toArray(), toJson()
+Authenticated:
+- follow(), unfollow()
+- postComment(...), deleteComment(...), reportComment(...)
+- setBio(...), setStatus(...), setProfilePicture(...)
+
+Studio API — important methods
+Read:
+- get(), refresh(), id(), title()
+- projects(), projectsPaginator(), allProjects()
+- curators(), curatorsCollection(), managers()
+- comments(), commentsCollection(), commentReplies()
+- infoDto(), yourRole(), toArray(), toJson()
+Authenticated management:
+- addProject(), removeProject()
+- inviteCurator(), promoteCurator(), removeCurator()
+- postComment(), replyComment(), deleteComment(), reportComment()
+- setTitle(), setDescription(), setFields(), setThumbnail()
+- follow(), unfollow()
+- openProjects(), closeProjects()
+- acceptInvite(), leave(), transferOwnership()
+
+Session API
+```php
+$session = $scratch->login($username,$password);
+
+$project = $session->project(104);
+$user = $session->user('ExampleUser');
+$studio = $session->studio(123456);
+$cloud = $session->cloud(104);
+```
+
+Useful Session methods
+- username()
+- sessionId()
+- xToken()
+- csrfToken()
+- http()
+- project(...), user(...), studio(...), cloud(...)
+- messages(), adminMessages()
+- searchProjects(), exploreProjects(), searchStudios(), exploreStudios(), news()
+- setProxy(), setRetries()
+- enableLogger(), disableLogger()
+- debug(), authDiagnostics()
+
+Security note: do not expose `sessionId()`, `xToken()` or credentials to browser/client code.
+
+Authentication example with environment variables
+```php
+$session = $scratch->login(
+    getenv('SCRATCH_USERNAME'),
+    getenv('SCRATCH_PASSWORD')
+);
+```
+
+Session ID auth
+```php
+$session = $scratch->loginWithSessionId(
+    getenv('SCRATCH_SESSION_ID')
+);
+```
+
+Collections / pagination / batch
+```php
+$top = $user->projectsCollection()
+    ->filter(fn($p) => $p->views() > 1000)
+    ->sortByDesc(fn($p) => $p->views())
+    ->take(10);
+```
+
+```php
+$page = $user->projectsPaginator()->limit(20)->page(2)->get();
+```
+
+```php
+$results = $scratch->batch()
+    ->project(104)
+    ->project(105)
+    ->user('griffpatch')
+    ->concurrency(4)
+    ->timeout(15)
+    ->retries(2)
+    ->run();
+```
+
+Cache / metrics / reliability
+```php
+$scratch->cache('file')->cacheRules([
+    'project:' => 30,
+    'user:' => 120,
+    'studio:' => 60,
+]);
+```
+
+```php
+$scratch->retry()
+    ->maxAttempts(4)
+    ->backoff('exponential')
+    ->baseDelayMs(200)
+    ->retryOn([429,500,502,503]);
+
+$scratch->circuitBreaker()->threshold(5)->cooldown(30);
+$metrics = $scratch->metrics()->summary();
+$health = $scratch->healthCheck(true);
+```
+
+Turkish Studio Trending — v0.8.5
+Purpose: build a Turkish-oriented Scratch project trend pool without requiring project authors to add a description hashtag.
+
+Current discovery behavior
+1. Search Scratch studios using Turkish-name queries such as `türk`, `Türk`, `TÜRK`.
+2. Deduplicate candidate studios by studio ID.
+3. Keep studios whose names/titles indicate the Turkish query.
+4. Fetch projects from selected studios with pagination via `Studio::allProjects()`.
+5. Deduplicate project IDs; preserve source-studio metadata.
+6. Rank projects using the local ranking algorithm.
+
+Call
+```php
+$projects = $scratch->turkishTrending(limit:20, scan:120);
+```
+
+Alias
+```php
+$projects = $scratch->turkishTrendProjects(20,120);
+```
+
+Default ranking weights
+- views: 0.35
+- loves: 0.15
+- favorites: 0.10
+- shared-date freshness: 0.40
+
+Views/loves/favorites are log-normalized within the candidate pool. Love/favorite values are supporting signals, not hard eligibility thresholds. Results expose `turkish_trend.rank`, `turkish_trend.score`, signal breakdown and source studios.
+
+Do not describe the current v0.8.5 algorithm as a `#TürkçeTrend` project-description filter; that older design is no longer the active discovery mechanism.
+
+Scratch Cloud Variables
+```php
+$cloud = $session->cloud($projectId);
+$cloud->connect();
+
+$value = $cloud->getRemote('score');
+$result = $cloud->setVerified('score',500);
+
+$cloud->disconnect();
+```
+
+Important CloudConnection methods
+- connect(), disconnect(), close(), isConnected()
+- set(), getRemote(), setVerified()
+- setMany(), variables(), history()
+- sync(), fetchRemoteValues(), remoteMeta()
+- waitFor(), waitForChange(), waitUntil()
+- watch(), onVariable(), on(), listen()
+- requests()
+- database()
+
+Long-running cloud listeners/RPC should normally run in CLI/worker processes, not a short HTTP request.
+
+CloudRequests / RPC
+```php
+$cloud->connect();
+$rpc = $cloud->requests('request','response');
+$rpc->route('sum', fn(array $params) => array_sum($params));
+$rpc->run();
+```
+
+Other CloudRequests APIs include `handleOnce()`, `middleware()` and route registration.
+
+CloudDatabase
+```php
+$db = $cloud->database('db');
+$db->set('level',12);
+$db->increment('coins',10);
+$value = $db->get('level');
+$db->delete('level');
+```
+
+Important CloudDatabase methods
+- all(), get(), set(), delete(), has(), clear()
+- increment(), decrement()
+- getToDB(), exportToMySQL()
+- static planToDB()
+
+CloudDatabase is constrained by Scratch Cloud Variable limitations and is not a general-purpose database replacement.
+
+CloudDB Pro → MySQL — v0.8.5
+Purpose: transfer the decoded CloudDatabase key/value map into MySQL.
+
+```php
+$cloud = $session->cloud($projectId);
+$cloud->connect();
+$result = $cloud->database('db')->getToDB(__DIR__.'/../secure/mysql.json');
+$cloud->disconnect();
+```
+
+MySQL bridge characteristics
+- uses ext-mysqli
+- accepts JSON config path, config array, or existing mysqli object
+- prepared statements for values
+- transaction/rollback
+- strict table/column identifier validation
+- optional upsert
+- optional table auto-create
+- nested arrays/objects stored as JSON strings
+- `planToDB()` can create/validate the SQL plan without opening MySQL
+
+Example config
+```json
+{
+  "host":"localhost",
+  "port":3306,
+  "username":"scratch_user",
+  "password":"CHANGE_ME",
+  "database":"scratch_app",
+  "table":"scratch_cloud",
+  "mode":"kv",
+  "key_column":"cloud_key",
+  "value_column":"cloud_value",
+  "updated_at_column":"updated_at",
+  "upsert":true,
+  "auto_create":false,
+  "charset":"utf8mb4"
+}
+```
+
+Never place MySQL credentials in browser-side Wizard fields. Use server-side Wizard profiles.
+
+Watcher 2.0
+Watcher is polling-based, not a webhook system.
+
+```php
+$watch = $scratch->watch()->interval(10)->project(104);
+$baseline = $watch->baseline();
+```
+
+Events/helpers
+- onView()
+- onLove()
+- onFavorite()
+- onRemix()
+- onComment()
+- onChange()
+- baseline()
+- snapshot()
+- lastState()
+- tick()
+- run()
+- static diffStates()
+
+Watcher uses fresh project state (`refresh`) so normal project cache does not hide live changes. Comment tracking uses the latest comment ID, not a nonexistent project `stats.comments` field. Watcher 2.0 also has persistent-state/event-queue/jitter/backoff support in the Watch layer.
+
+Analyzer / ProjectDiff / SB3
+```php
+$analysis = $scratch->project(104)->analyze();
+$summary = $analysis->summary();
+$warnings = $analysis->warnings();
+$opcodes = $analysis->opcodeCounts();
+```
+
+ProjectAnalyzer covers project.json/SB3 structure signals including sprites, blocks, costumes, sounds, variables, cloud variables, extensions, duplicate scripts, unused variables, broadcast graph and complexity-related information.
+
+Project comparison
+```php
+$diff = $scratch->compareProjects(104,105);
+$data = $diff->toArray();
+$summary = $diff->summary();
+```
+
+In v0.8.5 `ProjectDiff::summary()` is a compatibility alias for `toArray()`.
+
+SB3
+- Project::downloadSb3(...)
+- Project::sb3()
+- ScratchByPHP\\Sb3\\Sb3Archive
+- ScratchByPHP\\Sb3\\Sb3Validator
+
+Wizard Pro — v0.8.5
+Purpose: give PHP sites a ready-made ScratchByPHP control center without rebuilding a panel.
+
+Basic setup
+```php
+$scratch = new Scratch();
+$wizard = $scratch->wizard([
+    'allow_auth'=>true,
+    'allow_writes'=>true,
+    'clouddb_profiles'=>[
+        'main'=>__DIR__.'/../secure/mysql.json'
+    ],
+    'cloud_request_handlers'=>[
+        'sum'=>fn(array $params)=>array_sum($params)
+    ]
+]);
+
+// Must be called before HTML output:
+$wizard->handle();
+```
+
+Render
+```php
+echo $wizard->render([
+    'title'=>'ScratchByPHP Control Center',
+    'width'=>980,
+    'height'=>680
+]);
+```
+
+Wizard UI capabilities
+- Tailwind-based embedded popup/control center
+- draggable
+- resizable
+- maximizable
+- ScratchByPHP purple/orange/white branding and brand icon asset
+- searchable action list
+- JSON output viewer
+- contextual PHP snippet generator
+
+Wizard action areas
+- public Project/User/Studio/Search
+- server-side login/logout
+- authenticated Project/User/Studio actions
+- Cloud Variables
+- CloudDatabase
+- CloudDB Pro MySQL profiles
+- CloudRequests handle-once/custom handlers
+- Watcher baseline/tick
+- Analyzer/ProjectDiff
+- health/metrics/circuit-breaker developer tools
+
+Wizard security model
+- passwords are not persisted
+- Scratch session ID stays in PHP server-side session and is not returned in browser JSON
+- CSRF protection is used for Wizard API calls
+- token/session/password/cookie/project_token-like response keys are redacted
+- destructive actions require user confirmation
+- server-side CloudDB profiles expose only the profile name, not MySQL credentials/path
+- HTTPS is recommended for authenticated Wizard deployment
+
+Registration Assistant
+Important methods include generateCredentials(), generateAvailableCredentials(), checkUsername(), validatePassword(), credentialsJson(), parseCredentialsJson(), joinUrl().
+
+Registration Assistant does not solve or bypass CAPTCHA. The user finishes registration through Scratch's official flow. Credential JSON may intentionally contain plaintext passwords; treat it as a secret and never commit/publish it.
+
+CLI
+```text
+php bin/scratchbyphp version
+php bin/scratchbyphp doctor --json
+php bin/scratchbyphp project <id> --json
+php bin/scratchbyphp user <username> --json
+php bin/scratchbyphp studio <id> --json
+php bin/scratchbyphp analyze <id> --json
+php bin/scratchbyphp check-api --json
+php bin/scratchbyphp sb3:validate <file.sb3> --json
+php bin/scratchbyphp metrics --json
+```
+
+Testing / development
+- FakeScratch testing helper
+- tests/ local/regression tests
+- test-panels/ Bootstrap browser test center
+- phpunit.xml
+- phpstan.neon
+- tools/generate-api.php
+
+Common exceptions
+- ScratchByPHP\\Exceptions\\ScratchException
+- LoginException
+- ApiException
+- NetworkException
+- RateLimitException
+- CloudException
+- ValidationException
+
+Security model / coding rules
+- Authenticated HTTP credential-bearing requests are restricted/hardened for Scratch HTTPS hosts.
+- Auth redirect behavior is hardened.
+- Logs/debug output redact sensitive credential/token/session-like fields.
+- Session IDs are length/control-character validated.
+- Compressed session decode is bounded.
+- Keep WebSocket TLS verification enabled.
+- Keep passwords, session IDs, X-Tokens, CSRF values and DB credentials out of source control.
+- Keep credential/config JSON outside public web roots.
+- Never expose Scratch session credentials to frontend JavaScript.
+- Do not pass raw user-controlled paths into filesystem helpers.
+- Use authenticated actions only on accounts/resources the application is authorized to operate.
+- Do not use ScratchByPHP for CAPTCHA bypass, spam, coordinated/artificial engagement or other platform abuse.
+
+Performance guidance
+Scratch integrations are normally network-bound: Scratch latency/TLS/server response dominates local PHP abstraction cost. ScratchByPHP's main performance-related features are cache rules, batch/parallel requests, retry policies and avoiding duplicate network work. Its primary value is developer productivity, reuse, maintenance and consistent security handling rather than claiming a universal raw-PHP speed advantage.
+
+AI assistant guidance
+1. Assume current stable version is 0.8.5 unless the user supplies a different package/version.
+2. Prefer public `Scratch` resources when auth is not required.
+3. Create/use `Session` only for authenticated actions or Cloud features.
+4. Do not invent methods. If repository files are available, inspect the exact current class before proposing signatures.
+5. For Turkish Trending, describe current studio-discovery behavior; do not revert to the deprecated `#TürkçeTrend` description filter design.
+6. For ProjectDiff use `toArray()`; `summary()` is a compatibility alias in v0.8.5.
+7. For CloudDB Pro, use server-side config/profile paths and never put DB passwords in frontend fields.
+8. Recommend CLI/worker execution for long-running Cloud listener/RPC jobs.
+9. Keep examples PHP 8.1-compatible.
+10. State that ScratchByPHP is unofficial and Scratch endpoints may change.
+11. Do not recommend or generate bulk artificial engagement workflows.
+12. Player helpers are embeds, not view-manipulation tools.
+
+Project intent
+Make Scratch integration practical, reusable, testable and approachable for PHP developers while keeping authenticated state, Cloud protocol handling, reliability and security concerns centralized in the library.

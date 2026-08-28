@@ -1,0 +1,3 @@
+<?php
+namespace ScratchByPHP\Cache;
+final class MemoryCache implements CacheInterface { private array $data=[]; public function get(string $k,mixed $d=null):mixed{if(!$this->has($k))return $d;return $this->data[$k][0];} public function set(string $k,mixed $v,int $ttl=60):bool{$this->data[$k]=[$v,time()+max(1,$ttl)];return true;} public function delete(string $k):bool{unset($this->data[$k]);return true;} public function clear():bool{$this->data=[];return true;} public function has(string $k):bool{if(!isset($this->data[$k]))return false;if($this->data[$k][1]<time()){unset($this->data[$k]);return false;}return true;} }
